@@ -1,4 +1,4 @@
 castor
 ======
 
-Set up hooks for Docker events
+Hooks for Docker events
