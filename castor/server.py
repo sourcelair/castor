@@ -1,12 +1,9 @@
 from datetime import datetime
+from settings import SETTINGS
 import docker
 import json
 import tasks
 
-
-SETTINGS_FILE = open('settings.json')
-SETTINGS = json.loads(SETTINGS_FILE.read())
-SETTINGS_FILE.close()  # We don't have to keep the file open anymore
 
 DOCKER_SETTINGS = SETTINGS.get('docker', {})
 DOCKER_CLIENT_KWARGS = {}
@@ -22,4 +19,4 @@ for event in DOCKER_CLIENT.events():
     status = event['status']  # Event status
     container = event['id'][:10]  # Container that emitted the event
     print '[%s] Received event (%s - %s)' % (time, status, container)
-    # TODO: Fire dispatcing task
+    tasks.dispatch_event(event)
