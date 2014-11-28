@@ -1,10 +1,16 @@
+from celery import Celery
 from settings import SETTINGS
 import requests
 
 
 HOOKS = SETTINGS.get('hooks', [])
+CELERY_SETTINGS = SETTINGS.get('celery', {})
+
+app = Celery()
+app.conf.update(**CELERY_SETTINGS)
 
 
+@app.task
 def dispatch_event(event):
     event_repr = '%s:%s' % (event['id'][:10], event['status'])
     for url in HOOKS:

@@ -19,4 +19,4 @@ for event in DOCKER_CLIENT.events():
     status = event['status']  # Event status
     container = event['id'][:10]  # Container that emitted the event
     print '[%s] Received event (%s - %s)' % (time, status, container)
-    tasks.dispatch_event(event)
+    tasks.dispatch_event.delay(event)

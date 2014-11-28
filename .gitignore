@@ -54,7 +54,8 @@ docs/_build/
 target/
 
 # Ignore Vim files
-.swp
+*.swp
 
-# Ignore settings file
-settings.json
+# Ignore deployment-specific Castor files
+castor/settings.json
+castor/celerydb.sqlite
