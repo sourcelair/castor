@@ -52,3 +52,9 @@ docs/_build/
 
 # PyBuilder
 target/
+
+# Ignore Vim files
+.swp
+
+# Ignore settings file
+settings.json
