@@ -1,5 +1,6 @@
 from celery import Celery
 from settings import SETTINGS
+import pickle
 import requests
 
 
@@ -28,3 +29,17 @@ def dispatch_event(event):
             print '  [ERROR] Exception: %s' % e
         print '[DISPATCH END] %s --> %s' % dispatch_tuple
     return event
+
+
+def get_last_event():
+    last_event = None
+    sql_alchemy_session = dispatch_event.backend.ResultSession()
+    query = 'SELECT result from celery_taskmeta ORDER BY date_done DESC LIMIT 1;'
+    cursor = sql_alchemy_session.execute(query)
+    result = cursor.fetchone()
+    sql_alchemy_session.close()
+
+    if result:
+        last_event = pickle.loads(result[0])
+
+    return last_event
