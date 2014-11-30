@@ -27,3 +27,4 @@ def dispatch_event(event):
         except Exception as e:
             print '  [ERROR] Exception: %s' % e
         print '[DISPATCH END] %s --> %s' % dispatch_tuple
+    return event
