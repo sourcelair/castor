@@ -16,7 +16,7 @@ DOCKER_CLIENT = docker.Client(**DOCKER_CLIENT_KWARGS)
 EVENTS_ENDPOINT = '/events'
 LAST_EVENT = tasks.get_last_event()
 
-if LAST_EVENT:
+if LAST_EVENT and LAST_EVENT.get('time'):
     EVENTS_ENDPOINT += '?since=%s' % (LAST_EVENT['time'] + 1)
 
 EVENTS_URL = DOCKER_CLIENT._url(EVENTS_ENDPOINT)

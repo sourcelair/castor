@@ -12,23 +12,22 @@ app.conf.update(**CELERY_SETTINGS)
 
 
 @app.task
+def dispatch_web_hook(url, payload):
+    print 'Dispatching payload to %s' % url
+    try:
+        response = requests.post(url, data=payload)
+        response_tuple = (response.status_code, response.reason)
+    except Exception as e:
+        print '[ERROR] Exception: %s' % e
+
+
+@app.task
 def dispatch_event(event):
     event_repr = '%s:%s' % (event['id'][:10], event['status'])
     for url in HOOKS:
-        dispatch_tuple = (event_repr, url)
-        print '[DISPATCH START] Dispatching event %s --> %s' % dispatch_tuple
-        try:
-            response = requests.post(url, data=event)
-            response_tuple = (response.status_code, response.reason)
-
-            if response.status_code >= 400:
-                print '  [FAILURE] %s: %s' % response_tuple
-            else:
-                print '  [SUCCESS] %s: %s' % response_tuple
-        except Exception as e:
-            print '  [ERROR] Exception: %s' % e
-        print '[DISPATCH END] %s --> %s' % dispatch_tuple
-    return event
+        print 'Dispatching event %s to %s' % (event_repr, url)
+        dispatch_web_hook.delay(url, event)
+    return event  # We return the event for later querying
 
 
 def get_last_event():
@@ -39,7 +38,7 @@ def get_last_event():
     result = cursor.fetchone()
     sql_alchemy_session.close()
 
-    if result:
+    if result and result[0]:
         last_event = pickle.loads(result[0])
 
     return last_event

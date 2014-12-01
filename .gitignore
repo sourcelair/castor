@@ -58,4 +58,4 @@ target/
 
 # Ignore deployment-specific Castor files
 castor/settings.json
-castor/celerydb.sqlite
+castor/.data

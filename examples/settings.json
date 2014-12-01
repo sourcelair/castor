@@ -3,6 +3,11 @@
         "http://localhost:11235/api/hooks/docker/events"
     ],
     "celery": {
-        "BROKER_URL": "sqla+sqlite:///celerydb.sqlite"
+        "BROKER_URL": "sqla+sqlite:///.data/celerydb.sqlite",
+        "CELERY_RESULT_BACKEND": "db+sqlite:///.data/celerydb.sqlite",
+        "CELERY_ACCEPT_CONTENT": ["json"],
+        "CELERY_EVENT_SERIALIZER": "json",
+        "CELERY_RESULT_SERIALIZER": "json",
+        "CELERY_TASK_SERIALIZER": "json"
     }
 }
