@@ -9,7 +9,7 @@ DOCKER_SETTINGS = SETTINGS.get('docker', {})
 DOCKER_CLIENT_KWARGS = {}
 
 for setting in DOCKER_SETTINGS:
-    DOCKER_CLIENT_KWARGS[settings] = DOCKER_SETTINGS[setting]
+    DOCKER_CLIENT_KWARGS[setting] = DOCKER_SETTINGS[setting]
 
 DOCKER_CLIENT = docker.Client(**DOCKER_CLIENT_KWARGS)
 
