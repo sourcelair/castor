@@ -1,3 +1,8 @@
+"""
+This module defines the Castor server, that consumes the Docker events from
+a given host.
+"""
+
 from datetime import datetime
 from settings import SETTINGS
 import docker
@@ -11,8 +16,10 @@ DOCKER_CLIENT_KWARGS = {}
 for setting in DOCKER_SETTINGS:
     DOCKER_CLIENT_KWARGS[setting] = DOCKER_SETTINGS[setting]
 
+# Customize the Docker client according to settings in `settings.json`
 DOCKER_CLIENT = docker.Client(**DOCKER_CLIENT_KWARGS)
 
+# Define the events endpoint according to the last dispatched event (if any)
 EVENTS_ENDPOINT = '/events'
 LAST_EVENT = tasks.get_last_event()
 
@@ -34,5 +41,6 @@ try:
         print '[%s] Received event (%s - %s)' % (time, status, container)
         tasks.dispatch_event.delay(event)
 except KeyboardInterrupt:
+    # Do not display ugly exception if stopped with Ctrl + C
     print '\rBye.'
 

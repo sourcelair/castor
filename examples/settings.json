@@ -9,5 +9,9 @@
         "CELERY_EVENT_SERIALIZER": "json",
         "CELERY_RESULT_SERIALIZER": "json",
         "CELERY_TASK_SERIALIZER": "json"
+    },
+    "docker": {
+        "base_url": "unix://var/run/docker.sock",
+        "version": "15"
     }
 }

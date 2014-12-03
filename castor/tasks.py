@@ -1,3 +1,8 @@
+"""
+This module declares all tasks that dispatch Docker events to the hooks
+defined in ``settings.py``.
+"""
+
 from celery import Celery
 from settings import SETTINGS
 import pickle
@@ -13,6 +18,9 @@ app.conf.update(**CELERY_SETTINGS)
 
 @app.task
 def dispatch_web_hook(url, payload):
+    """
+    Makes a POST request to the given URL, with the given payload.
+    """
     print 'Dispatching payload to %s' % url
     try:
         response = requests.post(url, data=payload)
@@ -23,6 +31,9 @@ def dispatch_web_hook(url, payload):
 
 @app.task
 def dispatch_event(event):
+    """
+    Dispatches the given event to all registered hooks.
+    """
     event_repr = '%s:%s' % (event['id'][:10], event['status'])
     for url in HOOKS:
         print 'Dispatching event %s to %s' % (event_repr, url)
@@ -31,10 +42,13 @@ def dispatch_event(event):
 
 
 def get_last_event():
+    """
+    Returns the last Docker event that got dispatched.
+    """
     last_event = None
     sql_alchemy_session = dispatch_event.backend.ResultSession()
-    query = 'SELECT result from celery_taskmeta ORDER BY date_done DESC LIMIT 1;'
-    cursor = sql_alchemy_session.execute(query)
+    q = 'SELECT result from celery_taskmeta ORDER BY date_done DESC LIMIT 1;'
+    cursor = sql_alchemy_session.execute(q)
     result = cursor.fetchone()
     sql_alchemy_session.close()
 

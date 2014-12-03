@@ -24,6 +24,10 @@ Castor can be customized with a simple file. The settings of Castor are stored i
     "celery": {
         "BROKER_URL": "sqla+sqlite:///.data/celerydb.sqlite",
         "CELERY_RESULT_BACKEND": "db+sqlite:///.data/celerydb.sqlite"
+    },
+    "docker": {
+        "base_url": "unix://var/run/docker.sock",
+        "version": "15"
     }
 }
 ```
