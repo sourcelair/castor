@@ -1,6 +1,6 @@
 {
     "hooks": [
-        "http://host:80/hooks/docker/events"
+        "http://myhost/api/hooks/docker/events"
     ],
     "celery": {
         "BROKER_URL": "sqla+sqlite:///.data/celerydb.sqlite",
@@ -12,6 +12,6 @@
     },
     "docker": {
         "base_url": "unix://var/run/docker.sock",
-        "version": "15"
+        "version": "1.16"
     }
 }

@@ -2,14 +2,18 @@
 FROM python:2.7-onbuild
 MAINTAINER Paris Kasidiaris <pariskasidiaris@gmail.com>
 
-ADD . /var/lib/castor
-RUN cp /var/lib/castor/examples/settings.json /var/lib/castor/castor/settings.json
-RUN mkdir /var/lib/castor/castor/.data
-RUN chown -R www-data:www-data /var/lib/castor
-RUN chmod a+rw /var/lib/castor/castor/.data
+# Copy default settings
+RUN cp /usr/src/app/castor/examples/settings.json /usr/src/app/castor/castor/settings.json
 
-VOLUME ["//var/lib/castor/castor/.data"]
+# Create data directory
+RUN mkdir /usr/src/app//castor/.data
 
-WORKDIR /var/lib/castor
+#Set proper ownership and rights to root directory
+RUN chown -R www-data:www-data /usr/src/app/
+RUN chmod a+rw /usr/src/app/castor/.data
+
+VOLUME ["/usr/src/app/castor/.data"]
+
+WORKDIR /usr/src/app
 
 USER www-data
