@@ -6,7 +6,7 @@ MAINTAINER Paris Kasidiaris <pariskasidiaris@gmail.com>
 RUN cp /usr/src/app/examples/settings.json /usr/src/app/castor/settings.json
 
 # Create data directory
-RUN mkdir /usr/src/app/castor/.data
+RUN mkdir -p /usr/src/app/castor/.data
 
 #Set proper ownership and rights to root directory
 RUN chown -R www-data:www-data /usr/src/app/
