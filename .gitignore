@@ -59,3 +59,4 @@ target/
 # Ignore deployment-specific Castor files
 castor/settings.json
 castor/.data
+fig-production.yml

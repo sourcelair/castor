@@ -1,0 +1,8 @@
+consumer:
+    build: .
+    volumes: /var/run/docker.sock:/var/run/docker.sock
+    command: ./scripts/server-start.sh
+
+worker:
+    build: .
+    command: ./scripts/celery-start.sh
