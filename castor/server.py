@@ -8,6 +8,7 @@ from datetime import datetime
 from settings import SETTINGS
 import docker
 import json
+import os
 import tasks
 
 
@@ -21,11 +22,19 @@ for setting in DOCKER_SETTINGS:
 DOCKER_CLIENT = docker.Client(**DOCKER_CLIENT_KWARGS)
 
 # Define the events endpoint according to the last dispatched event (if any)
+last_event_file_PATH = '.data/.last-event'
 EVENTS_ENDPOINT = '/events'
-LAST_EVENT = tasks.get_last_event()
+LAST_EVENT = None
 
-if LAST_EVENT and LAST_EVENT.get('time'):
-    EVENTS_ENDPOINT += '?since=%s' % (LAST_EVENT['time'] + 1)
+if os.path.exists(last_event_file_PATH):
+    with open(last_event_file_PATH, 'r') as last_event_file:
+        try:
+            LAST_EVENT = int(last_event_file.read().strip())
+        except ValueError:
+            pass
+
+if LAST_EVENT:
+    EVENTS_ENDPOINT += '?since=%s' % (LAST_EVENT)
 
 EVENTS_URL = DOCKER_CLIENT._url(EVENTS_ENDPOINT)
 
@@ -41,6 +50,10 @@ def consume():
 
     for event in stream:
         event = json.loads(event)
+
+        with open(last_event_file_PATH, 'w+') as last_event_file:
+            last_event_file.write(str(event['time']))
+
         time = datetime.now()  # Time of event receipt
         status = event['status']  # Event status
         container = event['id'][:10]  # Container that emitted the event

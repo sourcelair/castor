@@ -39,20 +39,3 @@ def dispatch_event(event):
         print 'Dispatching event %s to %s' % (event_repr, url)
         dispatch_web_hook.delay(url, event)
     return event  # We return the event for later querying
-
-
-def get_last_event():
-    """
-    Returns the last Docker event that got dispatched.
-    """
-    last_event = None
-    sql_alchemy_session = dispatch_event.backend.ResultSession()
-    q = 'SELECT result from celery_taskmeta ORDER BY date_done DESC LIMIT 1;'
-    cursor = sql_alchemy_session.execute(q)
-    result = cursor.fetchone()
-    sql_alchemy_session.close()
-
-    if result and result[0]:
-        last_event = pickle.loads(result[0])
-
-    return last_event
