@@ -12,6 +12,6 @@
     },
     "docker": {
         "base_url": "unix://var/run/docker.sock",
-        "version": "1.16"
+        "version": "1.19"
     }
 }
