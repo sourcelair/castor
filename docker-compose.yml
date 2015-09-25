@@ -1,0 +1,6 @@
+server:
+  build: .
+  command: ./script/server
+  volumes:
+    - .:/usr/src/app
+    - /var/run/docker.sock:/var/run/docker.sock

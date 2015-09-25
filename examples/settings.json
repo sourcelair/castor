@@ -2,14 +2,6 @@
     "hooks": [
         "http://myhost/api/hooks/docker/events"
     ],
-    "celery": {
-        "BROKER_URL": "sqla+sqlite:///.data/celerydb.sqlite",
-        "CELERY_RESULT_BACKEND": "db+sqlite:///.data/celerydb.sqlite",
-        "CELERY_ACCEPT_CONTENT": ["json"],
-        "CELERY_EVENT_SERIALIZER": "json",
-        "CELERY_RESULT_SERIALIZER": "json",
-        "CELERY_TASK_SERIALIZER": "json"
-    },
     "docker": {
         "base_url": "unix://var/run/docker.sock",
         "version": "1.19"
