@@ -1,2 +1,4 @@
 docker-py==1.4
 requests==2.7
+rq==0.5.5
+rq-dashboard==0.3.4

@@ -38,7 +38,7 @@ The only thing needed to deploy castor is start its services with a single comma
 
 #### Castor server
 ```
-./scripts/server-start.sh
+./script/server
 ```
 
 #### Castor task queue

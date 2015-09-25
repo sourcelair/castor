@@ -1,6 +1,32 @@
+redis:
+  image: redis
+
 server:
   build: .
   command: ./script/server
   volumes:
     - .:/usr/src/app
     - /var/run/docker.sock:/var/run/docker.sock
+  links:
+    - redis:db
+  env_file: .env
+
+worker:
+  build: .
+  command: ./script/worker
+  volumes:
+    - .:/usr/src/app
+    - /var/run/docker.sock:/var/run/docker.sock
+  links:
+    - redis:db
+  env_file: .env
+
+dashboard:
+  build: .
+  command: ./script/dashboard
+  volumes:
+    - .:/usr/src/app
+    - /var/run/docker.sock:/var/run/docker.sock
+  links:
+    - redis:db
+  env_file: .env

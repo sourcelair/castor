@@ -5,6 +5,7 @@ by another Python script.
 """
 from settings import SETTINGS
 import docker
+import tasks
 
 
 DOCKER_SETTINGS = SETTINGS.get('docker', {})
@@ -23,7 +24,7 @@ def consume():
     """
     print 'Start consuming events from %s' % DOCKER_SETTINGS['base_url']
     for event in DOCKER_CLIENT.events():
-        print 'Dispatch: %s' % (event,)
+        tasks.dispatch_event.delay(event)
 
 
 if __name__ == '__main__':
