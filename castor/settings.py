@@ -1,6 +1,5 @@
 import json
 
 
-SETTINGS_FILE = open('settings.json')
-SETTINGS = json.loads(SETTINGS_FILE.read())
-SETTINGS_FILE.close()  # We don't have to keep the file open anymore
+with open('settings.json') as SETTINGS_FILE:
+    SETTINGS = json.loads(SETTINGS_FILE.read())

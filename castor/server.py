@@ -3,10 +3,8 @@ This module defines the Castor server, that consumes the Docker events from
 a given host. This module can be run as a command line script or get imported
 by another Python script.
 """
-
 from settings import SETTINGS
 import docker
-print 'hi 0'
 
 
 DOCKER_SETTINGS = SETTINGS.get('docker', {})
@@ -23,15 +21,12 @@ def consume():
     """
     Starts consuming Docker events accoding to the already defined settings.
     """
-
     print 'Start consuming events from %s' % DOCKER_SETTINGS['base_url']
-
-    for event in DOCKER_CLIENT.events(decode=True):
+    for event in DOCKER_CLIENT.events():
         print 'Dispatch: %s' % (event,)
 
 
 if __name__ == '__main__':
-    print 'hi 1'
     try:
         consume()
     except KeyboardInterrupt:
