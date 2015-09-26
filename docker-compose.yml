@@ -19,6 +19,8 @@ worker:
     - /var/run/docker.sock:/var/run/docker.sock
   links:
     - redis:db
+  environment:
+    - C_FORCE_ROOT=1
   env_file: .env
 
 dashboard:
@@ -31,4 +33,4 @@ dashboard:
     - redis:db
   env_file: .env
   ports:
-    - 9181:9181
+    - 5555:5555

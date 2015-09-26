@@ -2,4 +2,4 @@
 
 cd castor
 
-rqworker -c settings
+celery -A tasks worker --loglevel=info

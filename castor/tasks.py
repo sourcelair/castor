@@ -1,15 +1,14 @@
-from redis import Redis
-from rq.decorators import job
+from celery import Celery
 import requests
 import settings
 
-
-redis_conn = Redis(
-    host=settings.REDIS_HOST, port=settings.REDIS_PORT, db=settings.REDIS_DB
+BROKER_URL = 'redis://%s:%s/%s' % (
+    settings.REDIS_HOST, settings.REDIS_PORT, settings.REDIS_DB
 )
 
+app = Celery('castor', broker=BROKER_URL)
 
-@job('castor', connection=redis_conn)
+@app.task
 def dispatch_event(event):
     event_tuple = (event['status'], event['id'][:10])
     print 'Dispatching "%s" event for container "%s"' % event_tuple
