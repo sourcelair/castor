@@ -58,6 +58,7 @@ target/
 
 # Ignore deployment-specific Castor files
 castor/settings.json
+tests/settings.json
 castor/.data
 docker-compose.yml
 .env.production
