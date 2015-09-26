@@ -23,7 +23,7 @@ def consume():
     Starts consuming Docker events accoding to the already defined settings.
     """
     print 'Start consuming events from %s' % DOCKER_SETTINGS['base_url']
-    for event in DOCKER_CLIENT.events():
+    for event in DOCKER_CLIENT.events(decode=True):
         tasks.dispatch_event.delay(event)
 
 

@@ -4,14 +4,9 @@ import os
 
 with open('settings.json') as SETTINGS_FILE:
     SETTINGS = json.loads(SETTINGS_FILE.read())
+    LOCAL = SETTINGS # Prettier alias
 
-
-## RQ settings
-
-print '===='
-for kek in os.environ:
-    print kek, os.getenv(kek)
-print '===='
+HOOKS = LOCAL.get('hooks', []) # Set up hooks to receive Docker events
 
 REDIS_HOST = os.getenv('REDIS_HOST', 'redis')
 REDIS_PORT = int(os.getenv('REDIS_PORT', '6379'))

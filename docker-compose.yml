@@ -30,3 +30,5 @@ dashboard:
   links:
     - redis:db
   env_file: .env
+  ports:
+    - 9181:9181
