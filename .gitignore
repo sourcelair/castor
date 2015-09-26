@@ -59,4 +59,5 @@ target/
 # Ignore deployment-specific Castor files
 castor/settings.json
 castor/.data
-docker-compose-production.yml
+docker-compose.yml
+.env.production

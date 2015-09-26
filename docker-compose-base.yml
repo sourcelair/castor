@@ -7,8 +7,6 @@ server:
   volumes:
     - .:/usr/src/app
     - /var/run/docker.sock:/var/run/docker.sock
-  links:
-    - redis:db
   env_file: .env
 
 worker:
@@ -17,8 +15,6 @@ worker:
   volumes:
     - .:/usr/src/app
     - /var/run/docker.sock:/var/run/docker.sock
-  links:
-    - redis:db
   environment:
     - C_FORCE_ROOT=1
   env_file: .env
@@ -29,8 +25,6 @@ dashboard:
   volumes:
     - .:/usr/src/app
     - /var/run/docker.sock:/var/run/docker.sock
-  links:
-    - redis:db
   env_file: .env
   ports:
     - 5555:5555
