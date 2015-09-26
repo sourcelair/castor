@@ -2,4 +2,4 @@
 
 cd castor
 
-celery -A tasks worker --loglevel=info
+celery -A tasks worker --hostname=castor --loglevel=info
