@@ -60,5 +60,5 @@ target/
 castor/settings.json
 tests/settings.json
 castor/.data
-docker-compose.yml
-.env.production
+/docker-compose.yml
+/.env.production
