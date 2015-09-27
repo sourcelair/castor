@@ -8,7 +8,16 @@ import os
 import unittest
 
 
-class EnvironmentTest(unittest.TestCase):
+
+class BaseSettingsTest(unittest.TestCase):
+    settings_json_contents = None
+
+    def _import_settings(self):
+        from castor import settings
+
+        settings = reload(settings)
+        return settings
+
     def setUp(self):
         # Delete settings.pyc in case it exists, since we want the file
         # re-compiled every time that the test suite is being run.
@@ -17,10 +26,15 @@ class EnvironmentTest(unittest.TestCase):
 
         # Create a settings.json file with empty JSON data
         with open('settings.json', 'w+') as settings_file:
-            settings_file.write('{}')
+            settings_file.write(self.settings_json_contents)
 
     def tearDown(self):
+        # Remove the settings.json file created
         os.unlink('settings.json')
+
+
+class EnvironmentTest(BaseSettingsTest):
+    settings_json_contents = '{}'
 
     def test_redis_settings(self):
         """
@@ -36,7 +50,7 @@ class EnvironmentTest(unittest.TestCase):
             return env.get(key, default)
 
         with mock.patch('os.getenv', new=_mock_getenv):
-            from castor import settings
+            settings = self._import_settings()
 
             self.assertEqual(settings.REDIS_HOST, 'redishost')
             self.assertEqual(settings.REDIS_PORT, 1234)
@@ -44,3 +58,27 @@ class EnvironmentTest(unittest.TestCase):
             self.assertEqual(
                 settings.REDIS_URL, 'redis://redishost:1234/2'
             )
+
+class SettingsJSONTest(BaseSettingsTest):
+    """
+    Tests ensuring the proper parsing of settings.json and storing of its
+    data in settings.py.
+    """
+    settings_json_contents = """
+    {
+        "hooks": [
+            "http://myhost/api/hooks/docker/events"
+        ],
+        "docker": {
+            "base_url": "unix://var/run/docker.sock",
+            "version": "1.19"
+        }
+    }
+    """
+
+    def test_hooks(self):
+        settings = self._import_settings()
+
+        self.assertEqual(
+            settings.HOOKS, ['http://myhost/api/hooks/docker/events']
+        )
