@@ -2,4 +2,4 @@
 
 cd tests
 
-nosetests --all-modules tests
+nosetests --all-modules tests $@
