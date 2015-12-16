@@ -1,5 +1,5 @@
-docker-py==1.4
-requests==2.7
+docker-py==1.6.0
+requests==2.9.0
 redis==2.10.3
 celery==3.1.18
 flower==0.8.3
