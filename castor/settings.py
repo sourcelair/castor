@@ -18,3 +18,5 @@ REDIS_URL = os.getenv(
 )
 
 QUEUES = ['castor']
+
+RETRY_POLICY = LOCAL.get('retry_policy', [1, 5, 10, 30, 60])
