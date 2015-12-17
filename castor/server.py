@@ -4,28 +4,31 @@ a given host. This module can be run as a command line script or get imported
 by another Python script.
 """
 import docker
-import tasks
+import redis
 import settings
+import tasks
 
 
-DOCKER_SETTINGS = settings.SETTINGS.get('docker', {})
-# Customize the Docker client according to settings in `settings.json`
-DOCKER_CLIENT = docker.Client(**DOCKER_SETTINGS)
-
-
-def consume():
+def consume(docker_client, redis_client):
     """
     Starts consuming Docker events accoding to the already defined settings.
     """
-    print 'Start consuming events from %s' % DOCKER_SETTINGS['base_url']
-    for event in DOCKER_CLIENT.events(decode=True):
+    print 'Start consuming events from %s' % docker_client.base_url
+    since = redis_client.get('castor:last_event')
+    for event in docker_client.events(decode=True, since=since):
         for hook in settings.HOOKS:
             tasks.dispatch_event.delay(event, hook)
+        redis_client.set('castor:last_event', event['time'])
 
 
 if __name__ == '__main__':
     try:
-        consume()
+        docker_client = docker.Client(**settings.SETTINGS.get('docker', {}))
+        redis_client = redis.StrictRedis(
+            host=settings.REDIS_HOST, port=settings.REDIS_PORT,
+            db=settings.REDIS_DB,
+        )
+        consume(docker_client, redis_client)
     except KeyboardInterrupt:
         # Do not display ugly exception if stopped with Ctrl + C
         print '\rBye.'
