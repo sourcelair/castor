@@ -62,3 +62,4 @@ tests/settings.json
 castor/.data
 /docker-compose.yml
 /.env.production
+/.env

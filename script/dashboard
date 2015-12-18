@@ -2,4 +2,6 @@
 
 cd castor
 
-flower -A tasks --address=0.0.0.0 --port=5555 $@
+flower -A tasks\
+       --address=${DASHBOARD_BIND-0.0.0.0}\
+       --port=${DASHBOARD_PORT-5555} $@

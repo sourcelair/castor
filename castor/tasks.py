@@ -1,22 +1,52 @@
-from celery import Celery
 import requests
 import settings
 
-BROKER_URL = 'redis://%s:%s/%s' % (
-    settings.REDIS_HOST, settings.REDIS_PORT, settings.REDIS_DB
-)
+from celery import Celery
+from celery.utils.log import get_task_logger
 
-app = Celery('castor', broker=BROKER_URL)
 
-@app.task
-def dispatch_event(event):
-    event_tuple = (event['status'], event['id'][:10])
-    print 'Dispatching "%s" event for container "%s"' % event_tuple
+LOGGER = get_task_logger(__name__)
 
-    for hook in settings.HOOKS:
-        requests.post(hook, data=event)
+app = Celery('castor', broker=settings.REDIS_URL)
 
-    result = 'Dispatched %s:%s at %s destinations' % (
-        event_tuple[0], event_tuple[1], len(settings.HOOKS)
-    )
-    return result
+@app.task(bind=True, max_retries=len(settings.RETRY_POLICY))
+def dispatch_event(self, event, hook):
+    success = True
+    countdown = 0
+    # Do this, otherwise this will crash in the last retry with index out of
+    # bounds.
+    if self.request.retries < len(settings.RETRY_POLICY):
+        countdown = settings.RETRY_POLICY[self.request.retries]
+
+    LOGGER.info('Dispatching "%s" for "%s" to %s', event['status'],
+                event['id'][:10], hook)
+    try:
+        response = requests.post(hook, data=event)
+        response.raise_for_status()
+    except requests.exceptions.HTTPError as exc:
+        # If server error occured, log and retry
+        if response.status_code >= 500:
+            LOGGER.exception(
+                'Delivery failed with status "%s" %s" for "%s" to %s',
+                response.status_code, event['status'], event['id'][:10], hook,
+            )
+            raise self.retry(exc=exc, countdown=countdown)
+
+        # If server did not accept the response, log, mark as failure and
+        # don't retry
+        LOGGER.error(
+            'Delivery not accepted "%s" for "%s" to %s, status: %s',
+            event['status'], event['id'][:10], hook, response.status_code,
+        )
+        success = False
+    except Exception as exc:
+        # If an uncaugth exception occured, log and retry
+        LOGGER.exception(
+            'Delivery failed with exception "%s" for "%s" to %s',
+            event['status'], event['id'][:10], hook
+        )
+        raise self.retry(exc=exc, countdown=countdown)
+    else:
+        LOGGER.info('Delivered "%s" for "%s" to %s', event['status'],
+                    event['id'][:10], hook)
+    return {'event': event, 'hook': hook, 'success': success}
