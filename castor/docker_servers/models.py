@@ -3,7 +3,7 @@ import docker
 
 
 class DockerServer(models.Model):
-    name = models.CharField(max_length=255)
+    name = models.CharField(max_length=255, unique=True)
     version = models.CharField(max_length=255, default='auto')
     docker_host = models.CharField(max_length=255)
     docker_tls_verify = models.BooleanField(default=True)
@@ -28,3 +28,9 @@ class DockerServer(models.Model):
             environment=self.get_env()
         )
         return client
+
+    def __unicode__(self):
+        return 'Docker Server: %s' % self.name
+
+    def __str__(self):
+        return self.__unicode__()

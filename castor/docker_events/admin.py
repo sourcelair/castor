@@ -1,3 +1,7 @@
 from django.contrib import admin
 
-# Register your models here.
+from docker_events.models import DockerEvent
+
+class DockerEventAdmin(admin.ModelAdmin):
+    pass
+admin.site.register(DockerEvent, DockerEventAdmin)

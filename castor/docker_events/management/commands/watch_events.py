@@ -1,6 +1,10 @@
+import json
+
 from django.core.management.base import BaseCommand, CommandError
 
+from docker_events.models import DockerEvent
 from docker_servers.models import DockerServer
+
 
 class Command(BaseCommand):
     help = 'Watch for Docker events in the available servers'
@@ -13,5 +17,8 @@ class Command(BaseCommand):
         docker_client = server.get_client()
 
         for event in docker_client.events():
-            self.stdout.write(str(event))
-            self.stdout.write('\n')
+            json_event = json.loads(event)
+            DockerEvent.objects.create(
+                docker_server=server, data=str(json_event)
+            )
+            self.stdout.write(str(json_event))
