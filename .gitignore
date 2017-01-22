@@ -63,3 +63,6 @@ castor/.data
 /docker-compose.yml
 /.env.production
 /.env
+
+# Ignore virtualenv
+.venv
