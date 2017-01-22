@@ -39,6 +39,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'docker_events',
     'docker_servers',
+    'webhooks',
 ]
 
 MIDDLEWARE = [
