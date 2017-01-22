@@ -7,6 +7,7 @@ from docker_events.models import DockerEvent
 class WebHook(models.Model):
     docker_server = models.ForeignKey(DockerServer)
     payload_url = models.CharField(max_length=255)
+    active = models.BooleanField(default=True)
 
 
 class Notification(models.Model):
