@@ -66,3 +66,7 @@ castor/.data
 
 # Ignore virtualenv
 .venv
+
+# Ignore slite3
+db.sqlite3
+
