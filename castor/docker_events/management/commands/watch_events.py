@@ -3,6 +3,7 @@ import json
 from django.core.management.base import BaseCommand, CommandError
 
 from docker_events.models import DockerEvent
+from docker_events.tasks import dispatch_docker_event
 from docker_servers.models import DockerServer
 
 
@@ -18,7 +19,9 @@ class Command(BaseCommand):
 
         for event in docker_client.events():
             json_event = json.loads(event)
-            DockerEvent.objects.create(
-                docker_server=server, data=str(json_event)
+            docker_event = DockerEvent.objects.create(
+                docker_server=server,
+                data=json_event
             )
+            dispatch_docker_event.delay(docker_event.id)
             self.stdout.write(str(json_event))

@@ -1,4 +1,6 @@
+from django.contrib.postgres.fields import JSONField
 from django.db import models
+
 
 from docker_servers.models import DockerServer
 from docker_events.models import DockerEvent
@@ -14,8 +16,10 @@ class Notification(models.Model):
     webhook = models.ForeignKey(WebHook)
     docker_event = models.ForeignKey(DockerEvent)
     dispatched_at = models.DateTimeField(auto_now=True)
+    delivered = models.BooleanField(default=True)
+    failure_reason = models.TextField(max_length=65535, null=True, blank=True)
     delivery_duration = models.IntegerField()
-    request_headers = models.CharField(max_length=65535)
-    request_body = models.CharField(max_length=65535)
-    response_headers = models.CharField(max_length=65535)
-    response_body = models.CharField(max_length=65535)
+    request_headers = JSONField(default={})
+    request_body = models.TextField(max_length=65535, null=True, blank=True)
+    response_headers = JSONField(default={})
+    response_body = models.TextField(max_length=65535, null=True, blank=True)
