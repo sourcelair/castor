@@ -67,6 +67,5 @@ castor/.data
 # Ignore virtualenv
 .venv
 
-# Ignore slite3
-db.sqlite3
-
+# Ignore Node modules
+node_modules/

@@ -40,6 +40,7 @@ INSTALLED_APPS = [
     'django_celery_results',
     'docker_events',
     'docker_servers',
+    'web',
     'webhooks',
 ]
 

@@ -21,5 +21,6 @@ class Notification(models.Model):
     delivery_duration = models.IntegerField()
     request_headers = JSONField(default={}, null=True)
     request_body = models.TextField(max_length=65535, null=True, blank=True)
+    status_code = models.IntegerField(default=None, null=True)
     response_headers = JSONField(default={}, null=True)
     response_body = models.TextField(max_length=65535, null=True, blank=True)

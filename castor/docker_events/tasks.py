@@ -31,6 +31,7 @@ def dispatch_docker_event(docker_event_id):
                 dispatched_at=dispatched_at,
                 delivered=True,
                 delivery_duration=duration_in_ms,
+                status_code=response.status_code,
                 request_headers=dict(response.request.headers),
                 request_body=response.request.body,
                 response_headers=dict(response.headers),
