@@ -1,0 +1,40 @@
+<li class="notification-list-item list-group-item">
+  <span class="notification-status">
+    {% if notification.delivered %}
+      {% if notification.status_code < 300 %}
+        <span class="label label-success">
+          <i class="fa fa-check" aria-hidden="true"></i>
+          {{ notification.status_code }}
+        </span>
+      {% else %}
+        <span class="label label-warning">
+          <i class="fa fa-check" aria-hidden="true"></i>
+          {{ notification.status_code }}
+        </span>
+      {% endif %}
+    {% else %}
+      <span class="label label-danger">
+        <i class="fa fa-times" aria-hidden="true"></i>
+        Dropped
+      </span>
+    {% endif %}
+  </span>
+  <span>
+  From {{ notification.webhook.docker_server.name }}
+  to {{ notification.webhook.payload_url|urlize }}
+  {% if notification.delivered %}
+  <span class="badge">{{ notification.delivery_duration }}ms</span>
+  {% endif %}
+  </span>
+
+  <ul class="nav nav-pills pull-right">
+    <li role="presentation">
+      <span>{{ notification.dispatched_at }}</span>
+    </li>
+    <li role="presentation">
+      <a href="#">
+        <i class="fa fa-ellipsis-h" aria-hidden="true"></i>
+      </a>
+    </li>
+  </ul>
+</li>

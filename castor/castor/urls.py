@@ -17,8 +17,12 @@ from django.conf.urls import url
 from django.contrib import admin
 
 from web.views import home
+from web.views import webhooks
+from web.views import webhook
 
 urlpatterns = [
     url(r'^admin/', admin.site.urls),
     url(r'^$', home),
+    url(r'^webhooks/?$', webhooks),
+    url(r'^webhooks/(?P<webhook_id>\d+)/?$', webhook),
 ]

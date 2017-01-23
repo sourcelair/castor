@@ -17,3 +17,12 @@ header > .navbar a:hover {
   display: inline-block;
   width: 100px
 }
+
+.panel-heading .breadcrumb {
+  margin-bottom: 0;
+  padding: 0;
+}
+
+.notification-list-item .pull-right .label {
+  color: #111;
+}

@@ -1,0 +1,34 @@
+{% extends 'web/base.html' %}
+
+{% block content %}
+
+<div class="panel panel-default">
+  <div class="panel-heading">
+    <ol class="breadcrumb">
+      <li><a href="/">Home</a></li>
+      <li><a href="/webhooks/">Webhooks</a></li>
+      <li class="active">Inspect webhook</li>
+    </ol>
+  </div>
+  <div class="panel-body">
+    Every time a Docker event is being captured on
+    <a href="/docker-servers/{{ webhook.docker_server.id }}/">
+      <i class="fa fa-server" aria-hidden="true"></i>
+      {{ webhook.docker_server.name }}</a>,
+    it is being sent in a <strong>POST</strong> request to
+    {{ webhook.payload_url|urlize }}
+  </div>
+</div>
+
+<div class="panel panel-default">
+  <div class="panel-heading">Recent notifications</div>
+  <ul class="list-group">
+    {% for notification in notifications %}
+    {% include 'web/components/notification-list-item.html' %}
+    {% empty %}
+    <li class="list-group-item">No notifications sent yet!</li>
+    {% endfor %}
+  </ul>
+</div>
+
+{% endblock %}
