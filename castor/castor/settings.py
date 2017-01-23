@@ -83,7 +83,7 @@ DATABASES = {
         'NAME': os.getenv('POSTGRES_DB', 'castor'),
         'USER': os.getenv('POSTGRES_USER', 'castor'),
         'PASSWORD': os.getenv('POSTGRES_PASSWORD', 'password'),
-        'HOST': os.getenv('POSTGRES_HOST', '127.0.0.1'),
+        'HOST': os.getenv('POSTGRES_HOST', 'postgres'),
         'PORT': os.getenv('POSTGRES_PORT', '5432'),
     }
 }
@@ -128,4 +128,4 @@ USE_TZ = True
 STATIC_URL = '/static/'
 
 CELERY_RESULT_BACKEND = 'django-db'
-CELERY_BROKER_URL = 'redis://localhost:6379/0'
+CELERY_BROKER_URL = os.getenv('REDIS_URL', 'redis://localhost:6379/0')
