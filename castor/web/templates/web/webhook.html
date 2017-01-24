@@ -21,12 +21,12 @@
 </div>
 
 <div class="panel panel-default">
-  <div class="panel-heading">Recent notifications</div>
+  <div class="panel-heading">Recent deliveries</div>
   <ul class="list-group">
-    {% for notification in notifications %}
-    {% include 'web/components/notification-list-item.html' %}
+    {% for delivery in deliveries %}
+    {% include 'web/components/delivery-list-item.html' %}
     {% empty %}
-    <li class="list-group-item">No notifications sent yet!</li>
+    <li class="list-group-item">No deliveries yet!</li>
     {% endfor %}
   </ul>
 </div>

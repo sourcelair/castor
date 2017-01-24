@@ -13,7 +13,7 @@ header > .navbar a:hover {
   background-color: transparent;
 }
 
-.notification-status {
+.delivery-status {
   display: inline-block;
   width: 100px
 }
@@ -23,6 +23,6 @@ header > .navbar a:hover {
   padding: 0;
 }
 
-.notification-list-item .pull-right .label {
+.delivery-list-item .pull-right .label {
   color: #111;
 }

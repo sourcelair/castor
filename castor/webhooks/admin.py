@@ -1,6 +1,6 @@
 from django.contrib import admin
 
-from webhooks.models import Notification
+from webhooks.models import Delivery
 from webhooks.models import WebHook
 
 
@@ -9,6 +9,6 @@ class WebhookAdmin(admin.ModelAdmin):
 admin.site.register(WebHook, WebhookAdmin)
 
 
-class NotificationAdmin(admin.ModelAdmin):
+class DeliveryAdmin(admin.ModelAdmin):
     pass
-admin.site.register(Notification, NotificationAdmin)
+admin.site.register(Delivery, DeliveryAdmin)

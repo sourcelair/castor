@@ -12,7 +12,7 @@ class WebHook(models.Model):
     active = models.BooleanField(default=True)
 
 
-class Notification(models.Model):
+class Delivery(models.Model):
     webhook = models.ForeignKey(WebHook)
     docker_event = models.ForeignKey(DockerEvent)
     dispatched_at = models.DateTimeField(auto_now=True)

@@ -13,14 +13,34 @@ Including another URLconf
     1. Import the include() function: from django.conf.urls import url, include
     2. Add a URL to urlpatterns:  url(r'^blog/', include('blog.urls'))
 """
+from django.conf.urls import include
 from django.conf.urls import url
 from django.contrib import admin
+from rest_framework import routers
 
+from docker_events.views import DockerEventViewSet
+from docker_servers.views import DockerServerViewSet
 from web.views import home
 from web.views import webhooks
 from web.views import webhook
+from webhooks.views import DeliveryViewSet
+from webhooks.views import WebHookDeliveryViewSet
+from webhooks.views import WebHookViewSet
+
+
+router = routers.DefaultRouter()
+router.register(r'docker-events', DockerEventViewSet)
+router.register(r'docker-servers', DockerServerViewSet)
+router.register(r'webhooks', WebHookViewSet)
+router.register(r'deliveries', DeliveryViewSet)
+router.register(
+    r'webhooks/(?P<webhook_id>\d+)/deliveries',
+    WebHookDeliveryViewSet,
+    base_name='webhook-delivery'
+)
 
 urlpatterns = [
+    url(r'^api/', include(router.urls)),
     url(r'^admin/', admin.site.urls),
     url(r'^$', home),
     url(r'^webhooks/?$', webhooks),
