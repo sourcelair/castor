@@ -1,0 +1,30 @@
+<div class="delivery-details" data-delivery-id="{{ id }}" data-active="request">
+  <ul class="nav nav-tabs">
+    <li class="request-tab" role="presentation">
+      <a href="#delivery-request">Request</a>
+    </li>
+    <li class="response-tab" role="presentation">
+      <a href="#delivery-response">Response</a>
+    </li>
+  </ul>
+
+  <div class="panel">
+    <div class="panel-body">
+      <div class="delivery-request-details">
+        <h4>Headers</h4>
+        <pre>{% for key, value in request_headers.items %}<strong>{{ key }}</strong>: {{ value }}
+{% endfor %}</pre>
+        <h4>Payload</h4>
+        <pre>{{ request_body }}</pre>
+      </div>
+      <div class="delivery-response-details">
+        <h4>Headers</h4>
+        <pre>{% for key, value in response_headers.items %}<strong>{{ key }}</strong>: {{ value }}
+{% endfor %}</pre>
+        <h4>Body</h4>
+        <pre>{{ response_body }}</pre>
+      </div>
+    </div>
+  </div>
+
+</div>

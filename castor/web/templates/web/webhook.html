@@ -2,7 +2,7 @@
 
 {% block content %}
 
-<div class="panel panel-default">
+<div id="webhook-container" class="panel panel-default" data-webhook-id="{{ webhook.id }}">
   <div class="panel-heading">
     <ol class="breadcrumb">
       <li><a href="/">Home</a></li>
@@ -31,4 +31,40 @@
   </ul>
 </div>
 
+<script type="text/javascript">
+  $('.inspect-delivery').on('click', function (e) {
+    e.preventDefault();
+    var deliveryId = parseInt(
+      this.href.match(/deliveries\/(\d+)\.json$/)[1], 10
+    );
+    if ($(this).attr('data-loaded')) {
+      $(`li[data-delivery-id=${deliveryId}] .delivery-details`).toggleClass('hidden');
+      return;
+    }
+    fetch(this.href.replace(/\.json$/, '.html')).then(function (response) {
+      return response.text();
+    }).then(function (delivery) {
+      $(`li[data-delivery-id=${deliveryId}] a`).attr('data-loaded', 'true');
+      var $deliveryContent = $(`li[data-delivery-id=${deliveryId}] .delivery-content`);
+      $deliveryContent.html(delivery);
+
+      var $deliveryDetails = $deliveryContent.find('.delivery-details');
+
+      $deliveryDetails.find('.request-tab').addClass('active');
+      $deliveryDetails.find('.request-tab').on('click', function () {
+        console.log('req', this);
+        $deliveryDetails.attr('data-active', 'request');
+        $deliveryDetails.find('.response-tab').removeClass('active');
+        $deliveryDetails.find('.request-tab').addClass('active');
+      });
+
+      $deliveryDetails.find('.response-tab').on('click', function () {
+        console.log('res', this);
+        $deliveryDetails.attr('data-active', 'response');
+        $deliveryDetails.find('.request-tab').removeClass('active');
+        $deliveryDetails.find('.response-tab').addClass('active');
+      });
+    });
+  });
+</script>
 {% endblock %}
