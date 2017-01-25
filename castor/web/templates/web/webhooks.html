@@ -12,12 +12,12 @@
   {% for webhook in webhooks %}
   <li class="list-group-item">
     From
-    <a href="/docker-servers/{{ webhook.docker_server.id }}/">
+    <a href="{% url 'dockerserver-detail' webhook.docker_server.id %}">
       <i class="fa fa-server" aria-hidden="true"></i>
       {{ webhook.docker_server.name }}
     </a>
     to {{ webhook.payload_url|urlize }}
-    <a href="/webhooks/{{ webhook.id }}" class="pull-right btn btn-default btn-xs">
+    <a href="{% url 'webhook' webhook_id=webhook.id %}" class="pull-right btn btn-default btn-xs">
       <i class="fa fa-eye" aria-hidden="true"></i>
       Inspect
     </a>

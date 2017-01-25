@@ -46,8 +46,8 @@ urlpatterns = [
     url(r'^admin/', admin.site.urls),
     url(r'^api/', include(router.urls)),
     url(r'^$', home),
-    url(r'^signin/$', signin),
-    url(r'^logout/$', logout_then_login, name='logout'),
-    url(r'^webhooks/?$', webhooks),
-    url(r'^webhooks/(?P<webhook_id>\d+)/?$', webhook),
+    url(r'^signin/$', signin, name='signin'),
+    url(r'^signout/$', logout_then_login, name='signout'),
+    url(r'^webhooks/?$', webhooks, name='webhooks'),
+    url(r'^webhooks/(?P<webhook_id>\d+)/?$', webhook, name='webhook'),
 ]

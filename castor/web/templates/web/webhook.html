@@ -41,7 +41,12 @@
       $(`li[data-delivery-id=${deliveryId}] .delivery-details`).toggleClass('hidden');
       return;
     }
-    fetch(this.href.replace(/\.json$/, '.html')).then(function (response) {
+    fetch(
+      this.href.replace(/\.json$/, '.html'),
+      {
+        credentials: 'same-origin'
+      }
+    ).then(function (response) {
       return response.text();
     }).then(function (delivery) {
       $(`li[data-delivery-id=${deliveryId}] a`).attr('data-loaded', 'true');
