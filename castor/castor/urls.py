@@ -16,6 +16,7 @@ Including another URLconf
 from django.conf.urls import include
 from django.conf.urls import url
 from django.contrib import admin
+from django.contrib.auth.views import logout_then_login
 from rest_framework import routers
 
 from docker_events.views import DockerEventViewSet
@@ -46,6 +47,7 @@ urlpatterns = [
     url(r'^api/', include(router.urls)),
     url(r'^$', home),
     url(r'^signin/$', signin),
+    url(r'^logout/$', logout_then_login, name='logout'),
     url(r'^webhooks/?$', webhooks),
     url(r'^webhooks/(?P<webhook_id>\d+)/?$', webhook),
 ]

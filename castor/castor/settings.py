@@ -39,6 +39,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'django_celery_results',
     'rest_framework',
+    'rest_framework.authtoken',
     'social_django',
     'docker_events',
     'docker_servers',
@@ -143,6 +144,16 @@ STATIC_URL = '/static/'
 
 CELERY_RESULT_BACKEND = 'django-db'
 CELERY_BROKER_URL = os.getenv('REDIS_URL', 'redis://localhost:6379/0')
+
+REST_FRAMEWORK = {
+    'DEFAULT_AUTHENTICATION_CLASSES': (
+        'rest_framework.authentication.SessionAuthentication',
+        'rest_framework.authentication.TokenAuthentication',
+    ),
+    'DEFAULT_PERMISSION_CLASSES': (
+        'rest_framework.permissions.IsAuthenticated',
+    )
+}
 
 SOCIAL_AUTH_URL_NAMESPACE = 'auth'
 SOCIAL_AUTH_ADMIN_USER_SEARCH_FIELDS = ['username']
