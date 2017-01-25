@@ -39,6 +39,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'django_celery_results',
     'rest_framework',
+    'social_django',
     'docker_events',
     'docker_servers',
     'web',
@@ -68,6 +69,8 @@ TEMPLATES = [
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
+                'social_django.context_processors.backends',
+                'social_django.context_processors.login_redirect',
             ],
         },
     },
@@ -84,7 +87,7 @@ DATABASES = {
         'ENGINE': 'django.db.backends.postgresql',
         'NAME': os.getenv('POSTGRES_DB', 'castor'),
         'USER': os.getenv('POSTGRES_USER', 'castor'),
-        'PASSWORD': os.getenv('POSTGRES_PASSWORD', 'password'),
+        'PASSWORD': os.getenv('POSTGRES_PASSWORD'),  # No default for security
         'HOST': os.getenv('POSTGRES_HOST', 'postgres'),
         'PORT': os.getenv('POSTGRES_PORT', '5432'),
     }
@@ -109,6 +112,15 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
+AUTHENTICATION_BACKENDS = (
+    'social_core.backends.github.GithubOrganizationOAuth2',
+    'django.contrib.auth.backends.ModelBackend',
+)
+
+LOGIN_URL = '/signin/'
+LOGIN_REDIRECT_URL = '/'
+LOGOUT_REDIRECT_URL = LOGIN_URL
+
 
 # Internationalization
 # https://docs.djangoproject.com/en/1.10/topics/i18n/
@@ -131,3 +143,11 @@ STATIC_URL = '/static/'
 
 CELERY_RESULT_BACKEND = 'django-db'
 CELERY_BROKER_URL = os.getenv('REDIS_URL', 'redis://localhost:6379/0')
+
+SOCIAL_AUTH_URL_NAMESPACE = 'auth'
+SOCIAL_AUTH_ADMIN_USER_SEARCH_FIELDS = ['username']
+
+SOCIAL_AUTH_GITHUB_ORG_KEY = os.getenv('SOCIAL_AUTH_GITHUB_KEY')
+SOCIAL_AUTH_GITHUB_ORG_SECRET = os.getenv('SOCIAL_AUTH_GITHUB_SECRET')
+SOCIAL_AUTH_GITHUB_ORG_NAME = os.getenv('SOCIAL_AUTH_GITHUB_ORG_NAME')
+SOCIAL_AUTH_GITHUB_ORG_SCOPE = ['user:email', 'read:org']

@@ -33,7 +33,7 @@
         <span>{{ delivery.dispatched_at }}</span>
       </li>
       <li role="presentation">
-        <a class="inspect-delivery" href="{% url 'webhook-delivery-detail' webhook_id=webhook.id pk=delivery.id format='json' %}">
+        <a class="inspect-delivery" href="{% url 'webhook-delivery-detail' webhook_id=delivery.webhook.id pk=delivery.id format='json' %}">
           <i class="fa fa-ellipsis-h" aria-hidden="true"></i>
         </a>
       </li>

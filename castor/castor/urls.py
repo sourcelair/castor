@@ -21,6 +21,7 @@ from rest_framework import routers
 from docker_events.views import DockerEventViewSet
 from docker_servers.views import DockerServerViewSet
 from web.views import home
+from web.views import signin
 from web.views import webhooks
 from web.views import webhook
 from webhooks.views import DeliveryViewSet
@@ -40,9 +41,11 @@ router.register(
 )
 
 urlpatterns = [
-    url(r'^api/', include(router.urls)),
+    url(r'^auth/', include('social_django.urls', namespace='auth')),
     url(r'^admin/', admin.site.urls),
+    url(r'^api/', include(router.urls)),
     url(r'^$', home),
+    url(r'^signin/$', signin),
     url(r'^webhooks/?$', webhooks),
     url(r'^webhooks/(?P<webhook_id>\d+)/?$', webhook),
 ]

@@ -44,3 +44,14 @@ header > .navbar a:hover {
 .delivery-details[data-active=response] .delivery-request-details {
   display: none;
 }
+
+.btn-login {
+  background-color: #333;
+  color: #fff;
+  border: 1px solid #333;
+}
+
+.btn-login:hover {
+  background-color: #fff;
+  color: #333;
+}
