@@ -47,6 +47,14 @@
             </ul>
 
             <ul class="nav navbar-nav navbar-right">
+              {% if request.user.is_staff %}
+              <li>
+                <a href="{% url 'admin:index' %}">
+                  <i class="fa fa-user-circle-o" aria-hidden="true"></i>
+                  Admin Panel
+                </a>
+              </li>
+              {% endif %}
               <li>
                 {% if request.user.is_authenticated %}
                 <a href="{% url 'signout' %}">
@@ -60,14 +68,6 @@
                 </a>
                 {% endif %}
               </li>
-              {% if request.user.is_staff %}
-              <li>
-                <a href="{% url 'admin:index' %}">
-                  <i class="fa fa-user-circle-o" aria-hidden="true"></i>
-                  Admin Panel
-                </a>
-              </li>
-              {% endif %}
                 <li>
                   <a href="https://github.com/sourcelair/castor" target="_blank">
                     <i class="fa fa-github" aria-hidden="true"></i>

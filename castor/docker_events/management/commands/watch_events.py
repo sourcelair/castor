@@ -10,11 +10,15 @@ from docker_servers.models import DockerServer
 class Command(BaseCommand):
     help = 'Watch for Docker events in the available servers'
 
+    def add_arguments(self, parser):
+        parser.add_argument(
+            'docker_server', nargs='?', type=str, default='localhost'
+            )
+
     def handle(self, *args, **options):
-        # Right now this works just for the first servers, since we are mainly
-        # in prototyping stage.
-        # TODO: Make this work for all servers
-        server = DockerServer.objects.first()
+        server = DockerServer.objects.get(
+            name=options['docker_server']
+        )
         docker_client = server.get_client()
 
         for event in docker_client.events():
