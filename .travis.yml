@@ -12,7 +12,7 @@ services:
   - postgresql
 
 addons:
-  postgresql: "9.6"
+  postgresql: "9.4"  # We use 9.4 only on Travis
 
 env:
   - POSTGRES_USER="postgres" POSTGRESS_PASSWORD="" POSTGRES_HOST="127.0.0.1"
