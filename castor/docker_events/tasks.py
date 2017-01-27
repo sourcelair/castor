@@ -10,7 +10,8 @@ from webhooks.models import WebHook
 @shared_task
 def dispatch_docker_event(docker_event_id):
     docker_event = DockerEvent.objects.get(id=docker_event_id)
-    webhooks = WebHook.objects.all()
+    webhooks = WebHook.objects.filter(docker_server=docker_event.docker_server)
+
     for webhook in webhooks:
         data = {
             'event': docker_event.data,

@@ -22,7 +22,7 @@ class Command(BaseCommand):
         docker_client = server.get_client()
 
         for event in docker_client.events():
-            json_event = json.loads(event)
+            json_event = json.loads(event.decode('utf-8'))
             docker_event = DockerEvent.objects.create(
                 docker_server=server,
                 data=json_event

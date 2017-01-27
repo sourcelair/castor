@@ -1,8 +1,18 @@
 language: python
+
 python:
-    - 2.7
+    - 3.5
+
 install:
     - pip install -r requirements-dev.txt
-script: ./script/test
+
+script: ./bin/test
+
+addons:
+  postgresql: "9.6"
+
+env:
+  - POSTGRES_USER="postgres" POSTGRESS_PASSWORD="" POSTGRES_HOST="127.0.0.1"
+
 notifications:
     email: false
