@@ -8,6 +8,9 @@ install:
 
 script: ./bin/test
 
+services:
+  - postgresql
+
 addons:
   postgresql: "9.6"
 
