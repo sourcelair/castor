@@ -1,7 +1,11 @@
+from __future__ import unicode_literals
+
 from django.db import models
+from django.utils.encoding import python_2_unicode_compatible
 import docker
 
 
+@python_2_unicode_compatible
 class DockerServer(models.Model):
     name = models.CharField(max_length=255, unique=True)
     version = models.CharField(max_length=255, default='auto')
@@ -29,8 +33,5 @@ class DockerServer(models.Model):
         )
         return client
 
-    def __unicode__(self):
-        return 'Docker Server: %s' % self.name
-
     def __str__(self):
-        return self.__unicode__()
+        return 'Docker Server: %s' % self.name
