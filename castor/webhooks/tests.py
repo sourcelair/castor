@@ -119,6 +119,9 @@ class TasksTestCase(TestCase):
             json={
                 'event': self.docker_event.data,
                 'capture_time': int(self.docker_event.capture_time.timestamp())
+            },
+            headers={
+                'user-agent': 'Castor/0.1 via python-requests/2.12.5'
             }
         )
 

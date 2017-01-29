@@ -1,5 +1,3 @@
-import json
-
 from django.core.management.base import BaseCommand, CommandError
 from django.db.utils import IntegrityError
 
@@ -27,26 +25,27 @@ class Command(BaseCommand):
             name=options['docker_server']
         )
 
+        events_kwargs = {
+            'decode': True
+        }
+
         if options.get('resume'):
             last_event = DockerEvent.objects.filter(
                 docker_server=server
             ).order_by('-capture_time').first()
 
-            events_kwargs = {
-                'since': last_event.data['time']
-            }
-        else:
-            events_kwargs = {}
+            events_kwargs['since'] = last_event.data['time']
+
         docker_client = server.get_client()
 
         for event in docker_client.events(**events_kwargs):
-            json_event = json.loads(event.decode('utf-8'))
             try:
                 docker_event = DockerEvent.objects.create(
                     docker_server=server,
-                    data=json_event
+                    data=event
                 )
-                self.stdout.write(str(json_event))
+                self.stdout.write(str(event))
+                self.stdout.write('Saved with ID: %s' % docker_event.id)
             except IntegrityError as e:
                 # This means that the event has been already captured and saved
                 # into the database, so we just omit this message.

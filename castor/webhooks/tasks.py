@@ -26,7 +26,10 @@ def dispatch_docker_event_to_webhook(docker_event_id, webhook_id):
     try:
         response = requests.post(
             url=webhook.payload_url,
-            json=data
+            json=data,
+            headers={
+                'user-agent': 'Castor/0.1 via python-requests/2.12.5'
+            }
         )
         end = datetime.now()
         duration_timedelta = end - dispatched_at
