@@ -118,7 +118,7 @@ class TasksTestCase(TestCase):
             url=self.webhook_1.payload_url,
             json={
                 'event': self.docker_event.data,
-                'capture_time': int(self.docker_event.capture_time.timestamp())
+                'docker_server': docker_event.docker_server.name
             },
             headers={
                 'user-agent': 'Castor/0.1 via python-requests/2.12.5'

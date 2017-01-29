@@ -19,7 +19,7 @@ def dispatch_docker_event_to_webhook(docker_event_id, webhook_id):
 
     data = {
         'event': docker_event.data,
-        'capture_time': int(docker_event.capture_time.timestamp())
+        'docker_server': docker_event.docker_server.name
     }
     dispatched_at = datetime.now()
 
