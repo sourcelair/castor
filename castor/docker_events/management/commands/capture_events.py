@@ -4,12 +4,11 @@ from django.core.management.base import BaseCommand, CommandError
 from django.db.utils import IntegrityError
 
 from docker_events.models import DockerEvent
-from docker_events.tasks import dispatch_docker_event
 from docker_servers.models import DockerServer
 
 
 class Command(BaseCommand):
-    help = 'Watch for Docker events in the available servers'
+    help = 'Capture Docker events in the available servers'
 
     def add_arguments(self, parser):
         parser.add_argument(
@@ -47,9 +46,10 @@ class Command(BaseCommand):
                     docker_server=server,
                     data=json_event
                 )
+                self.stdout.write(str(json_event))
             except IntegrityError as e:
+                # This means that the event has been already captured and saved
+                # into the database, so we just omit this message.
+                # This is caused when using the --resume argument.
                 if 'duplicate key value' in str(e):
                     pass
-            else:
-                dispatch_docker_event.delay(docker_event.id)
-                self.stdout.write(str(json_event))
