@@ -32,11 +32,13 @@ DUMMY_EVENT = {
     'timeNano': 1485336358937541198
 }
 
+
 class DummyRequest(object):
     headers = {
         'Request-Header': 'SomeValue'
     }
     body = '{"status": "start"}'
+
 
 class DummyResponse(object):
     request = DummyRequest()

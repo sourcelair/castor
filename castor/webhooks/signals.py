@@ -8,7 +8,7 @@ from webhooks.tasks import dispatch_docker_event
 @receiver(post_save, sender=DockerEvent)
 def dispatch_new_docker_events(sender, **kwargs):
     """
-    Every time a new Docker event is being saved into the database, dispatch it.
+    Every time a new Docker event is being saved in the database, dispatch it.
     """
     if kwargs['created']:
         dispatch_docker_event.delay(kwargs['instance'].id)

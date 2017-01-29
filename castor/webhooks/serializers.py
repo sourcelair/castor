@@ -17,7 +17,9 @@ class WebHookSerializer(serializers.HyperlinkedModelSerializer):
 
     class Meta:
         model = WebHook
-        fields = ('id', 'url', 'docker_server', 'payload_url', 'deliveries_url')
+        fields = (
+            'id', 'url', 'docker_server', 'payload_url', 'deliveries_url'
+        )
 
 
 class DeliverySerializer(serializers.HyperlinkedModelSerializer):
@@ -27,7 +29,8 @@ class DeliverySerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
         model = Delivery
         fields = (
-            'id', 'url', 'webhook', 'docker_event', 'dispatched_at', 'delivered',
-            'failure_reason', 'delivery_duration', 'request_headers',
-            'request_body', 'status_code', 'response_headers', 'response_body',
+            'id', 'url', 'webhook', 'docker_event', 'dispatched_at',
+            'delivered', 'failure_reason', 'delivery_duration',
+            'request_headers', 'request_body', 'status_code',
+            'response_headers', 'response_body',
         )
