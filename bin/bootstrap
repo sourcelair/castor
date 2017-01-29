@@ -1,0 +1,12 @@
+#! /bin/bash
+
+# Bootstrap a Castor installation.
+
+set -e
+
+# Step 1: Run python castor/manage.py migrate, to create the database and tables
+python castor/manage.py migrate
+
+# Step 2: Run python castor/manage.py createsuperuser, to create an
+# administartor for the current Castor installation
+python castor/manage.py migrate

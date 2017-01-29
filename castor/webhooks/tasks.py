@@ -31,7 +31,7 @@ def dispatch_docker_event_to_webhook(docker_event_id, webhook_id):
         end = datetime.now()
         duration_timedelta = end - dispatched_at
         duration_in_ms = int(duration_timedelta.total_seconds() * 1000)
-        Delivery.objects.create(
+        delivery = Delivery.objects.create(
             webhook=webhook,
             docker_event=docker_event,
             dispatched_at=dispatched_at,
@@ -44,7 +44,7 @@ def dispatch_docker_event_to_webhook(docker_event_id, webhook_id):
             response_body=response.text
         )
     except Exception as e:
-        Delivery.objects.create(
+        delivery = Delivery.objects.create(
             webhook=webhook,
             docker_event=docker_event,
             dispatched_at=dispatched_at,
@@ -56,6 +56,8 @@ def dispatch_docker_event_to_webhook(docker_event_id, webhook_id):
             response_headers=None,
             response_body=None
         )
+
+    return delivery.id
 
 
 @shared_task
