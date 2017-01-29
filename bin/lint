@@ -1,0 +1,4 @@
+#! /bin/sh
+
+cd castor
+pep8 .
