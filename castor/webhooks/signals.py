@@ -10,5 +10,5 @@ def dispatch_new_docker_events(sender, **kwargs):
     """
     Every time a new Docker event is being saved in the database, dispatch it.
     """
-    if kwargs['created']:
+    if kwargs.get('created', False):
         dispatch_docker_event.delay(kwargs['instance'].id)

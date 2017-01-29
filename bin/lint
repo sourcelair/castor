@@ -1,4 +1,4 @@
 #! /bin/sh
 
 cd castor
-pep8 --exclude=*/migrations/*,settings.py,admin.py .
+pep8 --exclude=*/migrations/*,settings.py .

@@ -4,11 +4,11 @@ from webhooks.models import Delivery
 from webhooks.models import WebHook
 
 
+@admin.register(WebHook)
 class WebhookAdmin(admin.ModelAdmin):
     pass
-admin.site.register(WebHook, WebhookAdmin)
 
 
+@admin.register(Delivery)
 class DeliveryAdmin(admin.ModelAdmin):
     pass
-admin.site.register(Delivery, DeliveryAdmin)
