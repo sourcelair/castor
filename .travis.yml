@@ -6,8 +6,6 @@ python:
 install:
     - pip install -r requirements-dev.txt
 
-script: ./bin/test
-
 services:
   - postgresql
 
@@ -15,7 +13,13 @@ addons:
   postgresql: "9.4"  # We use 9.4 only on Travis
 
 env:
-  - POSTGRES_USER="postgres" POSTGRESS_PASSWORD="" POSTGRES_HOST="127.0.0.1"
+  global:
+    - POSTGRES_USER="postgres" POSTGRESS_PASSWORD="" POSTGRES_HOST="127.0.0.1"
+  matrix:
+    - TEST_SCRIPT=lint
+    - TEST_SCRIPT=test
+
+script: ./bin/$TEST_SCRIPT
 
 notifications:
     email: false
