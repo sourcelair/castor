@@ -10,7 +10,7 @@ from docker_servers.models import DockerServer
 class DockerEvent(models.Model):
     docker_server = models.ForeignKey(to=DockerServer)
     capture_time = models.DateTimeField(auto_now=True)
-    data = JSONField(default={})
+    data = JSONField(default={}, unique=True)
 
     def __unicode__(self):
         return 'Docker event on %s at %s' % (
