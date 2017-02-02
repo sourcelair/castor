@@ -1,55 +1,94 @@
-Castor
-======
+Castor - Webhooks for Docker events
+===================================
 
 [![Build Status](https://travis-ci.org/sourcelair/castor.svg)](https://travis-ci.org/sourcelair/castor)
 
-Castor listens to Docker events and invokes a POST request to all given hooks for every event.
+Castor monitors the Docker events of multiple Docker servers and
+dispatches them via HTTP POST requests to the desired WebHooks.
 
-## Inside Castor
+## Example
+You can tell Castor to monitor `unix:///var/run/docker.sock` (named as `localhost`) for Docker events and forward them to `https://www.example.com/hooks/docker`.
 
-Castor is written in Python and consists of **3 fundamental services**:
+Now, when the following event gets captured by Castor:
 
-- the Castor server — a simple Python program that listens to events from a single Docker server and puts them to the task queue
-- the Castor worker — a Celery app that dispatches a Docker event as payload to the registered hooks
-- Redis - Redis acts as the message broker between the Castor server and the Castor worker
-
-### Settings
-
-Castor can be customized with a very simple JSON file called `settings.json`, which should reside in the `castor` directory.
-
-Additional settings can be used using the [`.env`](.env) and `.env.production` files (example [`.env.production`](examples/.env.production)).
-
-#### Example settings
-[Link to file](examples/settings.json)
 ```json
 {
-    "hooks": [
-        "http://myhost/api/hooks/docker/events"
-    ],
-    "docker": {
-        "base_url": "unix://var/run/docker.sock",
-        "version": "1.19"
-    }
+  "from": "image/with:tag",
+  "id": "container-id",
+  "status": "start",
+  "time": 1423339459
 }
 ```
 
-## Deploying Castor
+it will be `POST`ed to `https://www.example.com/hooks/docker` with `application/json` content type and the following payload:
 
-Deploying Castor is done with Docker Compose. All you have to do is create a `docker-compose.yml` file and then run `docker-compose up`. To make your life easier, instead of writing the whole `docker-compose.yml` you can use [`docker-compose-base.yml`](docker-compose-base.yml) and extend its services according to your needs ([example file](examples/docker-compose.yml)).
+```json
+{
+  "docker_server": "localhost",
+  "event": {
+    "from": "image/with:tag",
+    "id": "container-id",
+    "status": "start",
+    "time": 1423339459
+  }
+}
+```
 
-**ATTENTION!** In order to get Castor working it has to have access to your Docker daemon. The most convenienve way to achieve this at the moment is bind the Docker socket straight into the Castor server container.
+## Getting started
 
-## Hacking on Castor
+### Step 0: Host setup
+Make sure you are running on a Ubuntu Linux machine with Docker 1.12 (or newer version) and Docker Compose installed.
 
-Hacking on Castor is done using Docker compose as well. After installing Docker Compose on your system run `docker-compose -f docker-compose-dev.yml` in your terminal and you should have the whole Castor stack up and running for you.
+(Docker for Mac should work as well)
 
-## Dashboard
+### Step 1: Clone this repository
+The first step you have to take is clone this repository and `cd` into it's root directory.
 
-Castor ships with an optional dashboard that helps get an overview of the tasks that you are running. Since the Castor worker is based on Celery, the dashboard is powered by [Flower](https://github.com/mher/flower/).
+### Step 2: Create a `.env` file
+Next, you will need to create a `.env` file to store configuration for your Castor installation in environment variable format (see how [`examples/.env.example`](examples/.env.example) is structured).
 
-![Dashboard screenshot](dashboard-screenshot.png)
+### Step 3: Configure database and Redis
+Now you have to set the following environment variables in your `.env` file:
 
-The Dashboard behavior can be customized using Flower environment variables in `.env.production`.
+- `POSTGRES_USER`
+- `POSTGRES_PASSWORD`
+- `POSTGRES_DB`
+- `REDIS_URL`
+
+Use the same format with [`examples/.env.example`](examples/.env.example)
+
+### Step 4: Configure authentication
+Castor allows only members of a GitHub organization to access it's dashboard. For this reason you will need to [register a new OAuth application](https://github.com/settings/applications/new) in GitHub.
+
+Then save your application's **Client ID**, **Client Secret** and **Organization name** in the following environment variables respectively in your `.env` file:
+
+- `SOCIAL_AUTH_GITHUB_KEY`
+- `SOCIAL_AUTH_GITHUB_SECRET`
+- `SOCIAL_AUTH_GITHUB_ORG_NAME`
+
+Use the same format with [`examples/.env.example`](examples/.env.example)
+
+### Step 5: Bootstrap the environment
+Run the following commands to:
+
+1. Create the database and a new superuser
+2. Install all front-end assets needed for the UI
+
+```
+docker-compose run web ./bin/bootstrap
+docker run -v $(PWD):/mnt/castor -w /mnt/castor/castor/web/static/web node:6 npm install
+```
+
+### Step 6: Launch Castor!
+Now all you have to do is launch castor by running:
+
+```
+docker-compose up
+```
+
+Now you can visit the Django admin panel, sign in with the superuser credentials that you created before and add Docker servers for monitoring and web hooks for dispatching events captured on those servers.
+
+⚠️ **Warning:** This will run Castor in *development mode*, and it will bind `/var/run/docker.sock` into the container to bind easily to a local Docker daemon. It is suggested strongly to create your own `docker-compose.yaml` file for your production deployment of Castor.
 
 ## License
 Castor is licensed under the MIT License. More info at [LICENSE](LICENSE) file.

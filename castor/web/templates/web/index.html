@@ -1,0 +1,13 @@
+{% extends 'web/base.html' %}
+
+{% block content %}
+<h1>Activity</h1>
+
+<ul class="list-group">
+  {% for delivery in deliveries %}
+  {% include 'web/components/delivery-list-item.html' %}
+  {% empty %}
+  <li class="list-group-item">No deliveries yet!</li>
+  {% endfor %}
+</ul>
+{% endblock %}

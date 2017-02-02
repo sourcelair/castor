@@ -1,7 +1,0 @@
-#! /usr/bin/env sh
-
-cd castor
-
-flower -A tasks\
-       --address=${DASHBOARD_BIND-0.0.0.0}\
-       --port=${DASHBOARD_PORT-5555} $@

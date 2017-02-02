@@ -1,5 +1,10 @@
-docker-py==1.6.0
-requests==2.9.0
-redis==2.10.3
-celery==3.1.18
-flower==0.8.3
+celery==4.0.2
+Django==1.10.5
+django-celery-results==1.0.1
+djangorestframework==3.5.3
+docker==2.0.2
+flower==0.9.1
+psycopg2==2.6.2
+redis==2.10.5
+requests==2.12.5
+social-auth-app-django==1.0.0

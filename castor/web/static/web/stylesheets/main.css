@@ -1,0 +1,57 @@
+header > .navbar {
+  border-radius: 0;
+  background-color: #333;
+  color: #f5f5f5;
+}
+
+header > .navbar a {
+  color: #f5f5f5;
+}
+
+header > .navbar a:hover {
+  text-decoration: underline;
+  background-color: transparent;
+}
+
+.delivery-status {
+  display: inline-block;
+  width: 100px
+}
+
+.panel-heading .breadcrumb {
+  margin-bottom: 0;
+  padding: 0;
+}
+
+.delivery-list-item .pull-right .label {
+  color: #111;
+}
+
+.delivery-details {
+  margin-top: 12px;
+}
+
+.delivery-details .panel {
+  border: 1px solid #ddd;
+  border-radius: 0;
+  border-top: none;
+}
+
+.delivery-details[data-active=request] .delivery-response-details {
+  display: none;
+}
+
+.delivery-details[data-active=response] .delivery-request-details {
+  display: none;
+}
+
+.btn-login {
+  background-color: #333;
+  color: #fff;
+  border: 1px solid #333;
+}
+
+.btn-login:hover {
+  background-color: #fff;
+  color: #333;
+}

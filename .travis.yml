@@ -1,8 +1,26 @@
 language: python
+
 python:
-    - 2.7
+    - 3.5
+
 install:
     - pip install -r requirements-dev.txt
-script: ./script/test
+
+services:
+  - postgresql
+  - redis-server
+
+addons:
+  postgresql: "9.4"  # We use 9.4 only on Travis
+
+env:
+  global:
+    - POSTGRES_USER="postgres" POSTGRESS_PASSWORD="" POSTGRES_HOST="127.0.0.1"
+  matrix:
+    - TEST_SCRIPT=lint
+    - TEST_SCRIPT=test
+
+script: ./bin/$TEST_SCRIPT
+
 notifications:
     email: false
