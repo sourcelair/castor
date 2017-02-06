@@ -44,7 +44,7 @@ INSTALLED_APPS = [
     'docker_events',
     'docker_servers',
     'web',
-    'webhooks',
+    'webhooks.apps.WebhooksConfig',
 ]
 
 MIDDLEWARE = [
