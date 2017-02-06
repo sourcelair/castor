@@ -10,3 +10,7 @@ python castor/manage.py migrate
 # Step 2: Run python castor/manage.py createsuperuser, to create an
 # administartor for the current Castor installation
 python castor/manage.py createsuperuser
+
+# Step 3: Run python castor/manage.py add_local_docker_server, to add a
+# Docker Server for the unix://var/run/docker.sock address.
+python castor/manage.py add_local_docker_server
