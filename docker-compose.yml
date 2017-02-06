@@ -1,0 +1,54 @@
+version: '2.1'
+
+services:
+  web:
+    build: .
+    depends_on: [ postgres, redis ]
+    environment:
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-password}
+      POSTGRES_USER: ${POSTGRES_USER:-castor}
+      POSTGRES_DB: ${POSTGRES_DB:-castor}
+      REDIS_URL: ${REDIS_URL:-redis://redis:6379/0}
+    env_file: .env
+    ports:
+      - 32770:8000
+    volumes:
+      - .:/usr/src/app
+      - /var/run/docker.sock:/var/run/docker.sock
+    command: python -u castor/manage.py runserver 0.0.0.0:8000
+
+  worker:
+    build: .
+    depends_on: [ postgres, redis ]
+    environment:
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-password}
+      REDIS_URL: ${REDIS_URL:-redis://redis:6379/0}
+    env_file: .env
+    volumes_from:
+      - web
+    command: ./bin/worker
+
+  capture_events:
+    build: .
+    depends_on: [ postgres, redis, worker ]
+    environment:
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-password}
+      REDIS_URL: ${REDIS_URL:-redis://redis:6379/0}
+    env_file: .env
+    volumes_from:
+      - web
+    command: python -u castor/manage.py capture_events
+
+  redis:
+    image: redis:3.2
+
+  postgres:
+    image: postgres:9.6
+    environment:
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-password}
+    env_file: .env
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+
+volumes:
+  postgres_data:
