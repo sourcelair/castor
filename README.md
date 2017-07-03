@@ -75,8 +75,8 @@ Run the following commands to:
 2. Install all front-end assets needed for the UI
 
 ```
-docker-compose run web ./bin/bootstrap
-docker run -v $(PWD):/mnt/castor -w /mnt/castor/castor/web/static/web node:6 npm install
+docker-compose run --rm web ./bin/bootstrap
+docker run --rm -v $(PWD):/mnt/castor -w /mnt/castor/castor/web/static/web node:6 npm install
 ```
 
 ### Step 6: Launch Castor!

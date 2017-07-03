@@ -1,42 +1,60 @@
-version: '2.1'
+version: '3.3'
 
 services:
   web:
-    build: .
-    depends_on: [ postgres, redis ]
+    image: sourcelair/castor:latest
+    depends_on:
+      - postgres
+      - redis
     environment:
-      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-password}
+      POSTGRES_HOST: ${POSTGRES_HOST:-postgres}
+      POSTGRES_PORT: ${POSTGRES_PORT:-5432}
       POSTGRES_USER: ${POSTGRES_USER:-castor}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-password}
       POSTGRES_DB: ${POSTGRES_DB:-castor}
       REDIS_URL: ${REDIS_URL:-redis://redis:6379/0}
     env_file: .env
     ports:
       - 32770:8000
     volumes:
-      - .:/usr/src/app
+      - .:/opt/castor
       - /var/run/docker.sock:/var/run/docker.sock
     command: python -u castor/manage.py runserver 0.0.0.0:8000
 
   worker:
-    build: .
-    depends_on: [ postgres, redis ]
+    image: sourcelair/castor:latest
+    depends_on:
+      - postgres
+      - redis
     environment:
+      POSTGRES_HOST: ${POSTGRES_HOST:-postgres}
+      POSTGRES_PORT: ${POSTGRES_PORT:-5432}
+      POSTGRES_USER: ${POSTGRES_USER:-castor}
       POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-password}
+      POSTGRES_DB: ${POSTGRES_DB:-castor}
       REDIS_URL: ${REDIS_URL:-redis://redis:6379/0}
     env_file: .env
-    volumes_from:
-      - web
+    volumes:
+      - .:/opt/castor
+      - /var/run/docker.sock:/var/run/docker.sock
     command: ./bin/worker
 
   capture_events:
-    build: .
-    depends_on: [ postgres, redis, worker ]
+    image: sourcelair/castor:latest
+    depends_on:
+      - postgres
+      - redis
+      - worker
     environment:
+      POSTGRES_HOST: ${POSTGRES_HOST:-postgres}
+      POSTGRES_PORT: ${POSTGRES_PORT:-5432}
+      POSTGRES_USER: ${POSTGRES_USER:-castor}
       POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-password}
+      POSTGRES_DB: ${POSTGRES_DB:-castor}
       REDIS_URL: ${REDIS_URL:-redis://redis:6379/0}
-    env_file: .env
-    volumes_from:
-      - web
+    volumes:
+      - .:/opt/castor
+      - /var/run/docker.sock:/var/run/docker.sock
     command: python -u castor/manage.py capture_events
 
   redis:

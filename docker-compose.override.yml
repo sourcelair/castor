@@ -1,0 +1,16 @@
+version: '3.3'
+
+services:
+  web:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      args:
+        PIP_REQUIREMENTS_FILE: requirements-dev.txt
+
+  worker:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      args:
+        PIP_REQUIREMENTS_FILE: requirements-dev.txt
