@@ -1,10 +1,10 @@
 celery==4.0.2
-Django==1.10.5
+Django==1.11.3
 django-celery-results==1.0.1
-djangorestframework==3.5.3
-docker==2.0.2
-flower==0.9.1
-psycopg2==2.6.2
+djangorestframework==3.6.3
+docker==2.4.2
+flower==0.9.2
+psycopg2==2.7.1
 redis==2.10.5
-requests==2.12.5
-social-auth-app-django==1.0.0
+requests==2.18.1
+social-auth-app-django==1.2.0
