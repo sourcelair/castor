@@ -4,7 +4,8 @@ python:
     - 3.6
 
 install:
-    - pip install -r requirements-dev.txt
+    - pip install pipenv==9.0.1
+    - pipenv install --system --dev
 
 services:
   - postgresql

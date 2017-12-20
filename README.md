@@ -76,7 +76,7 @@ Run the following commands to:
 
 ```
 docker-compose run --rm web ./bin/bootstrap
-docker run --rm -v $(PWD):/mnt/castor -w /mnt/castor/castor/web/static/web node:6 npm install
+docker run --rm -v $(PWD):/mnt/castor -w /mnt/castor/castor/web/static/web node:8 npm install
 ```
 
 ### Step 6: Launch Castor!

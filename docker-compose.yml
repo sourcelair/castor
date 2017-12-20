@@ -63,7 +63,9 @@ services:
   postgres:
     image: postgres:9.6
     environment:
+      POSTGRES_USER: ${POSTGRES_USER:-castor}
       POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-password}
+      POSTGRES_DB: ${POSTGRES_DB:-castor}
     env_file: .env
     volumes:
       - postgres_data:/var/lib/postgresql/data
