@@ -10,6 +10,9 @@ FROM python:3.6
 COPY . /usr/src/app
 WORKDIR /usr/src/app
 
+ENV PYTHONUNBUFFERED=1 \
+    VIRTUAL_ENV=/usr/local
+
 RUN pip install pipenv==9.0.1
 RUN pipenv install --system
 
