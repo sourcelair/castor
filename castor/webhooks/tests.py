@@ -1,7 +1,6 @@
 from unittest import mock
 from django.test import TestCase
 
-from docker_events.models import DockerEvent
 from docker_servers.models import DockerServer
 from webhooks.models import Delivery
 from webhooks.models import WebHook
@@ -49,31 +48,6 @@ class DummyResponse(object):
     text = 'OK.'
 
 
-class SignalsTestCase(TestCase):
-    def setUp(self):
-        self.docker_server = DockerServer.objects.create(
-            name='localhost',
-            docker_host='unix:///var/run/docker.sock',
-            docker_tls_verify=False,
-            docker_cert_path=None
-        )
-
-    def tearDown(self):
-        self.docker_server.delete()
-
-    def test_dispatch_calling_on_new_docker_event(self):
-        """
-        Make sure that the dispatch task is being called for every new
-        DockerEvent saved in the database.
-        """
-        with mock.patch('webhooks.signals.dispatch_docker_event') as disp_mock:
-            docker_event = DockerEvent.objects.create(
-                docker_server=self.docker_server,
-                data=DUMMY_EVENT
-            )
-        disp_mock.delay.assert_called_once_with(docker_event.id)
-
-
 class TasksTestCase(TestCase):
     def setUp(self):
         self.docker_server = DockerServer.objects.create(
@@ -81,10 +55,6 @@ class TasksTestCase(TestCase):
             docker_host='unix:///var/run/docker.sock',
             docker_tls_verify=False,
             docker_cert_path=None
-        )
-        self.docker_event = DockerEvent.objects.create(
-            docker_server=self.docker_server,
-            data=DUMMY_EVENT
         )
         self.webhook_1 = WebHook.objects.create(
             docker_server=self.docker_server,
@@ -96,7 +66,6 @@ class TasksTestCase(TestCase):
         )
 
     def tearDown(self):
-        self.docker_event.delete()
         self.webhook_1.delete()
         self.webhook_2.delete()
         self.docker_server.delete()
@@ -111,14 +80,14 @@ class TasksTestCase(TestCase):
         with mock.patch('webhooks.tasks.requests') as requests_mock:
             requests_mock.post.return_value = dummy_response
             delivery_id = tasks.dispatch_docker_event_to_webhook(
-                self.docker_event.id, self.webhook_1.id
+                DUMMY_EVENT, self.webhook_1.id
             )
 
         requests_mock.post.assert_called_once_with(
             url=self.webhook_1.payload_url,
             json={
-                'event': self.docker_event.data,
-                'docker_server': self.docker_event.docker_server.name
+                'event': DUMMY_EVENT,
+                'docker_server': self.webhook_1.docker_server.name
             },
             headers={
                 'user-agent': 'Castor/0.1 via python-requests/2.12.5'
@@ -148,7 +117,7 @@ class TasksTestCase(TestCase):
         with mock.patch('webhooks.tasks.requests') as requests_mock:
             requests_mock.post.side_effect = dummy_exception
             delivery_id = tasks.dispatch_docker_event_to_webhook(
-                self.docker_event.id, self.webhook_1.id
+                DUMMY_EVENT, self.webhook_1.id
             )
 
         delivery = Delivery.objects.get(id=delivery_id)
@@ -163,19 +132,19 @@ class TasksTestCase(TestCase):
 
     def test_dispatching_of_docker_event_to_all_webhooks(self):
         """
-        Make sure that every time a DockerEvent is put for dispatching, that
+        Make sure that every time a Docker event is put for dispatching, that
         it is being dispatched to all WebHooks of the corresponding
         DockerServer.
         """
         with mock.patch(
             'webhooks.tasks.dispatch_docker_event_to_webhook'
         ) as dispatch_mock:
-            tasks.dispatch_docker_event(self.docker_event.id)
+            tasks.dispatch_docker_event(DUMMY_EVENT, self.docker_server)
 
         dispatch_mock.delay.assert_has_calls(
             [
-                mock.call(self.docker_event.id, self.webhook_1.id),
-                mock.call(self.docker_event.id, self.webhook_2.id)
+                mock.call(DUMMY_EVENT, self.webhook_1.id),
+                mock.call(DUMMY_EVENT, self.webhook_2.id)
             ],
             any_order=True
         )
