@@ -14,7 +14,7 @@ ENV PYTHONUNBUFFERED=1 \
     VIRTUAL_ENV=/usr/local
 
 RUN pip install pipenv==9.0.1
-RUN pipenv install --system
+RUN pipenv install
 
 COPY --from=builder /usr/src/app /usr/src/app/castor/web/static/web
 
