@@ -19,7 +19,6 @@ from django.contrib import admin
 from django.contrib.auth.views import logout_then_login
 from rest_framework import routers
 
-from docker_events.views import DockerEventViewSet
 from docker_servers.views import DockerServerViewSet
 from web.views import home
 from web.views import signin
@@ -31,7 +30,6 @@ from webhooks.views import WebHookViewSet
 
 
 router = routers.DefaultRouter()
-router.register(r'docker-events', DockerEventViewSet)
 router.register(r'docker-servers', DockerServerViewSet)
 router.register(r'webhooks', WebHookViewSet)
 router.register(r'deliveries', DeliveryViewSet)

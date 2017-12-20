@@ -3,7 +3,6 @@ from django.db import models
 
 
 from docker_servers.models import DockerServer
-from docker_events.models import DockerEvent
 
 
 class WebHook(models.Model):
@@ -14,7 +13,6 @@ class WebHook(models.Model):
 
 class Delivery(models.Model):
     webhook = models.ForeignKey(WebHook)
-    docker_event = models.ForeignKey(DockerEvent)
     dispatched_at = models.DateTimeField(auto_now=True)
     delivered = models.BooleanField(default=True)
     failure_reason = models.TextField(null=True, blank=True)
