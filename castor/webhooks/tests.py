@@ -139,7 +139,7 @@ class TasksTestCase(TestCase):
         with mock.patch(
             'webhooks.tasks.dispatch_docker_event_to_webhook'
         ) as dispatch_mock:
-            tasks.dispatch_docker_event(DUMMY_EVENT, self.docker_server)
+            tasks.dispatch_docker_event(DUMMY_EVENT, self.docker_server.pk)
 
         dispatch_mock.delay.assert_has_calls(
             [
