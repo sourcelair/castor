@@ -36,6 +36,7 @@ INSTALLED_APPS = [
     'django.contrib.contenttypes',
     'django.contrib.sessions',
     'django.contrib.messages',
+    'whitenoise.runserver_nostatic',
     'django.contrib.staticfiles',
     'django_celery_results',
     'rest_framework',
@@ -49,6 +50,7 @@ INSTALLED_APPS = [
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
+    'whitenoise.middleware.WhiteNoiseMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
@@ -162,3 +164,5 @@ SOCIAL_AUTH_GITHUB_ORG_KEY = os.getenv('SOCIAL_AUTH_GITHUB_KEY')
 SOCIAL_AUTH_GITHUB_ORG_SECRET = os.getenv('SOCIAL_AUTH_GITHUB_SECRET')
 SOCIAL_AUTH_GITHUB_ORG_NAME = os.getenv('SOCIAL_AUTH_GITHUB_ORG_NAME')
 SOCIAL_AUTH_GITHUB_ORG_SCOPE = ['user:email', 'read:org']
+
+STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')

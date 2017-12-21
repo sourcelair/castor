@@ -3,8 +3,8 @@ from datetime import datetime
 import requests
 from celery import shared_task
 
-from webhooks.models import Delivery
-from webhooks.models import WebHook
+from docker_servers.models import DockerServer
+from webhooks.models import Delivery, WebHook
 
 
 @shared_task
@@ -59,11 +59,12 @@ def dispatch_docker_event_to_webhook(docker_event, webhook_id):
 
 
 @shared_task
-def dispatch_docker_event(docker_event, docker_server):
+def dispatch_docker_event(docker_event, docker_server_pk):
     """
     Dispatch the Docker event to all WebHooks subscribed to the Docker
     server's events.
     """
+    docker_server = DockerServer.objects.get(pk=docker_server_pk)
     webhooks = WebHook.objects.filter(docker_server=docker_server)
 
     for webhook in webhooks:

@@ -34,7 +34,7 @@ class Command(BaseCommand):
 
         for docker_event in docker_client.events(**events_kwargs):
             try:
-                dispatch_docker_event.delay(docker_event, server)
+                dispatch_docker_event.delay(docker_event, server.pk)
                 self.stdout.write(str(docker_event))
             except IntegrityError as e:
                 # This means that the event has been already captured and saved
