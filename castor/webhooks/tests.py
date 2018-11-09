@@ -2,7 +2,6 @@ from unittest import mock
 from django.test import TestCase
 
 from docker_servers.models import DockerServer
-from webhooks.models import Delivery
 from webhooks.models import WebHook
 from webhooks import tasks
 
@@ -73,13 +72,13 @@ class TasksTestCase(TestCase):
     def test_successful_event_dispatching_to_webhook(self):
         """
         Ensure that when an event is being dispatched to a WebHook, the right
-        requests.post call is being made and that the right Delivery object is
-        being created.
+        requests.post call is being made and that the right delivery dict is
+        being return.
         """
         dummy_response = DummyResponse()
         with mock.patch('webhooks.tasks.requests') as requests_mock:
             requests_mock.post.return_value = dummy_response
-            delivery_id = tasks.dispatch_docker_event_to_webhook(
+            delivery = tasks.dispatch_docker_event_to_webhook(
                 DUMMY_EVENT, self.webhook_1.id
             )
 
@@ -94,41 +93,37 @@ class TasksTestCase(TestCase):
             }
         )
 
-        delivery = Delivery.objects.get(id=delivery_id)
-
-        self.assertTrue(delivery.delivered)
-        self.assertEqual(delivery.status_code, dummy_response.status_code)
+        self.assertTrue(delivery['delivered'])
+        self.assertEqual(delivery['status_code'], dummy_response.status_code)
         self.assertEqual(
-            delivery.request_headers, dummy_response.request.headers
+            delivery['request_headers'], dummy_response.request.headers
         )
         self.assertEqual(
-            delivery.request_body, dummy_response.request.body
+            delivery['request_body'], dummy_response.request.body
         )
-        self.assertEqual(delivery.response_headers, dummy_response.headers)
-        self.assertEqual(delivery.response_body, dummy_response.text)
+        self.assertEqual(delivery['response_headers'], dummy_response.headers)
+        self.assertEqual(delivery['response_body'], dummy_response.text)
 
     def test_unsuccessful_event_dispatching_to_webhook(self):
         """
         Ensure that when an event does not get dispatched successfully, the
-        appropriate Delivery object is being created
+        appropriate dict is being returned.
         """
         dummy_exception = Exception('Things went wrong!')
 
         with mock.patch('webhooks.tasks.requests') as requests_mock:
             requests_mock.post.side_effect = dummy_exception
-            delivery_id = tasks.dispatch_docker_event_to_webhook(
+            delivery = tasks.dispatch_docker_event_to_webhook(
                 DUMMY_EVENT, self.webhook_1.id
             )
 
-        delivery = Delivery.objects.get(id=delivery_id)
-
-        self.assertFalse(delivery.delivered)
-        self.assertEqual(delivery.failure_reason, str(dummy_exception))
-        self.assertEqual(delivery.delivery_duration, 0)
-        self.assertEqual(delivery.request_headers, None)
-        self.assertEqual(delivery.request_body, None)
-        self.assertEqual(delivery.response_headers, None)
-        self.assertEqual(delivery.response_body, None)
+        self.assertFalse(delivery['delivered'])
+        self.assertEqual(delivery['failure_reason'], str(dummy_exception))
+        self.assertEqual(delivery['delivery_duration'], 0)
+        self.assertEqual(delivery['request_headers'], None)
+        self.assertEqual(delivery['request_body'], None)
+        self.assertEqual(delivery['response_headers'], None)
+        self.assertEqual(delivery['response_body'], None)
 
     def test_dispatching_of_docker_event_to_all_webhooks(self):
         """

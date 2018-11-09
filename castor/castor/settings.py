@@ -38,7 +38,6 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'whitenoise.runserver_nostatic',
     'django.contrib.staticfiles',
-    'django_celery_results',
     'rest_framework',
     'rest_framework.authtoken',
     'social_django',
@@ -144,7 +143,7 @@ USE_TZ = True
 
 STATIC_URL = '/static/'
 
-CELERY_RESULT_BACKEND = 'django-db'
+CELERY_RESULT_BACKEND = os.getenv('REDIS_RESULTS_URL', 'redis://localhost:6379/1')
 CELERY_BROKER_URL = os.getenv('REDIS_URL', 'redis://localhost:6379/0')
 
 REST_FRAMEWORK = {

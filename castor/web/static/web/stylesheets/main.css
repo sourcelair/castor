@@ -13,36 +13,9 @@ header > .navbar a:hover {
   background-color: transparent;
 }
 
-.delivery-status {
-  display: inline-block;
-  width: 100px
-}
-
 .panel-heading .breadcrumb {
   margin-bottom: 0;
   padding: 0;
-}
-
-.delivery-list-item .pull-right .label {
-  color: #111;
-}
-
-.delivery-details {
-  margin-top: 12px;
-}
-
-.delivery-details .panel {
-  border: 1px solid #ddd;
-  border-radius: 0;
-  border-top: none;
-}
-
-.delivery-details[data-active=request] .delivery-response-details {
-  display: none;
-}
-
-.delivery-details[data-active=response] .delivery-request-details {
-  display: none;
 }
 
 .btn-login {

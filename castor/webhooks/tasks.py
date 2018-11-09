@@ -4,7 +4,7 @@ import requests
 from celery import shared_task
 
 from docker_servers.models import DockerServer
-from webhooks.models import Delivery, WebHook
+from webhooks.models import WebHook
 
 
 @shared_task
@@ -31,31 +31,29 @@ def dispatch_docker_event_to_webhook(docker_event, webhook_id):
         end = datetime.now()
         duration_timedelta = end - dispatched_at
         duration_in_ms = int(duration_timedelta.total_seconds() * 1000)
-        delivery = Delivery.objects.create(
-            webhook=webhook,
-            dispatched_at=dispatched_at,
-            delivered=True,
-            delivery_duration=duration_in_ms,
-            status_code=response.status_code,
-            request_headers=dict(response.request.headers),
-            request_body=response.request.body,
-            response_headers=dict(response.headers),
-            response_body=response.text
-        )
+        return {
+            'webhook': webhook.pk,
+            'dispatched_at': dispatched_at,
+            'delivered': True,
+            'delivery_duration': duration_in_ms,
+            'status_code': response.status_code,
+            'request_headers': dict(response.request.headers),
+            'request_body': response.request.body,
+            'response_headers': dict(response.headers),
+            'response_body': response.text,
+        }
     except Exception as e:
-        delivery = Delivery.objects.create(
-            webhook=webhook,
-            dispatched_at=dispatched_at,
-            delivered=False,
-            failure_reason=str(e),
-            delivery_duration=0,
-            request_headers=None,
-            request_body=None,
-            response_headers=None,
-            response_body=None
-        )
-
-    return delivery.id
+        return {
+            'webhook': webhook,
+            'dispatched_at': dispatched_at,
+            'delivered': False,
+            'failure_reason': str(e),
+            'delivery_duration': 0,
+            'request_headers': None,
+            'request_body': None,
+            'response_headers': None,
+            'response_body': None
+        }
 
 
 @shared_task
