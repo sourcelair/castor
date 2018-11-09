@@ -24,20 +24,12 @@ from web.views import home
 from web.views import signin
 from web.views import webhooks
 from web.views import webhook
-from webhooks.views import DeliveryViewSet
-from webhooks.views import WebHookDeliveryViewSet
 from webhooks.views import WebHookViewSet
 
 
 router = routers.DefaultRouter()
 router.register(r'docker-servers', DockerServerViewSet)
 router.register(r'webhooks', WebHookViewSet)
-router.register(r'deliveries', DeliveryViewSet)
-router.register(
-    r'webhooks/(?P<webhook_id>\d+)/deliveries',
-    WebHookDeliveryViewSet,
-    base_name='webhook-delivery'
-)
 
 urlpatterns = [
     url(r'^auth/', include('social_django.urls', namespace='auth')),
