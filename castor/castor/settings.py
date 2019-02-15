@@ -12,6 +12,8 @@ https://docs.djangoproject.com/en/1.10/ref/settings/
 
 import os
 
+import sec
+
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
@@ -88,8 +90,8 @@ DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
         'NAME': os.getenv('POSTGRES_DB', 'castor'),
-        'USER': os.getenv('POSTGRES_USER', 'castor'),
-        'PASSWORD': os.getenv('POSTGRES_PASSWORD'),  # No default for security
+        'USER': sec.load('POSTGRES_USER', 'castor'),
+        'PASSWORD': sec.load('POSTGRES_PASSWORD'),  # No default for security
         'HOST': os.getenv('POSTGRES_HOST', 'postgres'),
         'PORT': os.getenv('POSTGRES_PORT', '5432'),
     }

@@ -14,9 +14,6 @@ services:
       POSTGRES_DB: ${POSTGRES_DB:-castor}
       REDIS_URL: ${REDIS_URL:-redis://redis:6379/0}
       REDIS_RESULTS_URL: ${REDIS_URL:-redis://redis:6379/1}
-    env_file: .env
-    ports:
-      - 32770:8000
     volumes:
       - .:/opt/castor
       - /var/run/docker.sock:/var/run/docker.sock
@@ -35,7 +32,6 @@ services:
       POSTGRES_DB: ${POSTGRES_DB:-castor}
       REDIS_URL: ${REDIS_URL:-redis://redis:6379/0}
       REDIS_RESULTS_URL: ${REDIS_URL:-redis://redis:6379/1}
-    env_file: .env
     volumes:
       - .:/opt/castor
       - /var/run/docker.sock:/var/run/docker.sock
@@ -69,7 +65,6 @@ services:
       POSTGRES_USER: ${POSTGRES_USER:-castor}
       POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-password}
       POSTGRES_DB: ${POSTGRES_DB:-castor}
-    env_file: .env
     volumes:
       - postgres_data:/var/lib/postgresql/data
 
