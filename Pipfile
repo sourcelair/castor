@@ -1,12 +1,9 @@
 [[source]]
-
 url = "https://pypi.python.org/simple"
 verify_ssl = true
 name = "pypi"
 
-
 [packages]
-
 celery = "==4.0.2"
 django = "==1.11.3"
 django-celery-results = "==1.0.1"
@@ -18,9 +15,8 @@ redis = "==2.10.5"
 requests = "==2.18.1"
 social-auth-app-django = "==1.2.0"
 whitenoise = "*"
-
+sec = "*"
 
 [dev-packages]
-
 ipython = "==6.1.0"
 pycodestyle = "==2.3.1"
