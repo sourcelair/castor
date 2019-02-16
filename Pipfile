@@ -4,7 +4,7 @@ verify_ssl = true
 name = "pypi"
 
 [packages]
-celery = "==4.0.2"
+celery = ">=4.2.0"
 django = "==1.11.3"
 django-celery-results = "==1.0.1"
 djangorestframework = "==3.6.3"
