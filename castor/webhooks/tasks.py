@@ -1,17 +1,22 @@
 from datetime import datetime
+import logging
 
-import requests
 from celery import shared_task
+import requests
 
 from docker_servers.models import DockerServer
 from webhooks.models import WebHook
 
+
+LOGGER = logging.getLogger(__name__)
+LOGGER.setLevel(logging.DEBUG)
 
 @shared_task
 def dispatch_docker_event_to_webhook(docker_event, webhook_id):
     """
     Dispatch the Docker event to the WebHook identified by the given id.
     """
+    LOGGER.debug(f'Dispatching Docker Event {docker_event} to WebHook #{webhook_id}.')
     webhook = WebHook.objects.get(id=webhook_id)
 
     data = {
@@ -21,6 +26,7 @@ def dispatch_docker_event_to_webhook(docker_event, webhook_id):
     dispatched_at = datetime.now()
 
     try:
+        LOGGER.debug(f'Sending POST request to {webhook.payload_url} with payload {data}.')
         response = requests.post(
             url=webhook.payload_url,
             json=data,
@@ -31,6 +37,7 @@ def dispatch_docker_event_to_webhook(docker_event, webhook_id):
         end = datetime.now()
         duration_timedelta = end - dispatched_at
         duration_in_ms = int(duration_timedelta.total_seconds() * 1000)
+        LOGGER.INFO(f'({response.status_code}) Successfully sent {data} to {webhook.payload_url}.')
         return {
             'webhook': webhook.pk,
             'dispatched_at': dispatched_at,
@@ -43,6 +50,7 @@ def dispatch_docker_event_to_webhook(docker_event, webhook_id):
             'response_body': response.text,
         }
     except Exception as e:
+        LOGGER.INFO(f'Could not send {data} to {webhook.payload_url}: {e}.')
         return {
             'webhook': webhook,
             'dispatched_at': dispatched_at,
