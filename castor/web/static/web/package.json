@@ -11,7 +11,7 @@
   "dependencies": {
     "bootstrap": "^3.4.1",
     "font-awesome": "^4.7.0",
-    "jquery": "^3.1.1",
+    "jquery": "^3.4.0",
     "whatwg-fetch": "^2.0.2"
   }
 }
