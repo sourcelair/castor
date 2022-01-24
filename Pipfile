@@ -18,5 +18,5 @@ whitenoise = "*"
 sec = "*"
 
 [dev-packages]
-ipython = "==6.1.0"
+ipython = "==7.16.3"
 pycodestyle = "==2.3.1"
