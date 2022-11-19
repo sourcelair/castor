@@ -6,7 +6,7 @@ on:
   pull_request:
 
 env:
-  GIT_SHA: ${{ github.sha }}
+  DOCKER_IMAGE: ghcr.io/sourcelair/castor:${{ github.sha }}
 
 jobs:
   test:
