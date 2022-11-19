@@ -66,5 +66,4 @@ castor/.data
 # Ignore virtualenv
 .venv
 
-# Ignore Node modules
-node_modules/
+.mypy_cache

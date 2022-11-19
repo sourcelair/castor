@@ -1,8 +1,0 @@
-#! /bin/bash
-
-# This script runs the worker process of Castor.
-# All this process does is dispatch every Docker event to all registered
-# Webhooks with Celery tasks.
-
-cd castor
-celery -A castor worker -l info

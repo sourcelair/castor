@@ -1,4 +1,0 @@
-#! /bin/sh
-
-cd castor
-pycodestyle --exclude=*/migrations/*,settings.py .

@@ -1,21 +1,10 @@
-FROM node:8 as builder
+FROM ghcr.io/withlogicco/poetry:1.2.2
 
-COPY ./castor/web/static/web /usr/src/app
-WORKDIR /usr/src/app
-RUN npm install
+COPY pyproject.toml poetry.lock ./
+RUN poetry install
 
+COPY ./ ./
 
-FROM python:3.6
-
-COPY . /usr/src/app
-WORKDIR /usr/src/app
-
-ENV PYTHONUNBUFFERED=1 \
-    VIRTUAL_ENV=/usr/local
-
-RUN pip install pipenv==9.0.1
-RUN pipenv install
-
-COPY --from=builder /usr/src/app /usr/src/app/castor/web/static/web
-
-CMD ["python", "-u", "castor/manage.py", "runserver", "0.0.0.0:8000"]
+ARG CASTOR_RELEASE=norelease
+ENV CASTOR_RELEASE=${CASTOR_RELEASE}
+CMD [ "python", "-m", "castor" ]

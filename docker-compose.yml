@@ -1,72 +1,23 @@
 version: "3.7"
 
 services:
-  web:
-    image: sourcelair/castor:latest
-    depends_on:
-      - postgres
-      - redis
+  castor:
+    build:
+      context: .
+      args:
+        CASTOR_RELEASE: ${CASTOR_RELEASE:-norelease}
+    image: ${DOCKER_IMAGE:-ghcr.io/sourcelair/castor}
     environment:
-      POSTGRES_HOST: ${POSTGRES_HOST:-postgres}
-      POSTGRES_PORT: ${POSTGRES_PORT:-5432}
-      POSTGRES_USER: ${POSTGRES_USER:-castor}
-      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-password}
-      POSTGRES_DB: ${POSTGRES_DB:-castor}
-      REDIS_URL: ${REDIS_URL:-redis://redis:6379/0}
-      REDIS_RESULTS_URL: ${REDIS_URL:-redis://redis:6379/1}
+      CASTOR_WEBHOOK_URL: ${CASTOR_WEBHOOK_URL:-http://httpbin/anything}
+      CASTOR_RELEASE: ${CASTOR_RELEASE:-norelease}
+      CASTOR_ENVIRONMENT: ${CASTOR_ENVIRONMENT:-local}
+      DOCKER_HOST: unix:///var/run/docker.sock
+      SENTRY_DSN: ${SENTRY_DSN}
     volumes:
-      - .:/opt/castor
+      - .:/usr/src/app
       - /var/run/docker.sock:/var/run/docker.sock
-    command: python -u castor/manage.py runserver 0.0.0.0:8000
-
-  worker:
-    image: sourcelair/castor:latest
-    depends_on:
-      - postgres
-      - redis
-    environment:
-      POSTGRES_HOST: ${POSTGRES_HOST:-postgres}
-      POSTGRES_PORT: ${POSTGRES_PORT:-5432}
-      POSTGRES_USER: ${POSTGRES_USER:-castor}
-      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-password}
-      POSTGRES_DB: ${POSTGRES_DB:-castor}
-      REDIS_URL: ${REDIS_URL:-redis://redis:6379/0}
-      REDIS_RESULTS_URL: ${REDIS_URL:-redis://redis:6379/1}
-    volumes:
-      - .:/opt/castor
-      - /var/run/docker.sock:/var/run/docker.sock
-    command: ./bin/worker
-
-  capture_events:
-    image: sourcelair/castor:latest
-    depends_on:
-      - postgres
-      - redis
-      - worker
-    environment:
-      POSTGRES_HOST: ${POSTGRES_HOST:-postgres}
-      POSTGRES_PORT: ${POSTGRES_PORT:-5432}
-      POSTGRES_USER: ${POSTGRES_USER:-castor}
-      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-password}
-      POSTGRES_DB: ${POSTGRES_DB:-castor}
-      REDIS_URL: ${REDIS_URL:-redis://redis:6379/0}
-      REDIS_RESULTS_URL: ${REDIS_URL:-redis://redis:6379/1}
-    volumes:
-      - .:/opt/castor
-      - /var/run/docker.sock:/var/run/docker.sock
-    command: python -u castor/manage.py capture_events
-
-  redis:
-    image: redis:3.2
-
-  postgres:
-    image: postgres:9.6
-    environment:
-      POSTGRES_USER: ${POSTGRES_USER:-castor}
-      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-password}
-      POSTGRES_DB: ${POSTGRES_DB:-castor}
-    volumes:
-      - postgres_data:/var/lib/postgresql/data
-
-volumes:
-  postgres_data:
+    command: python -m castor
+  httpbin:
+    image: kennethreitz/httpbin
+    ports:
+      - ${HTTPBIN_EXTERNAL_PORT:-8000}:80
