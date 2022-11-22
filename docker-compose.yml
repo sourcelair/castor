@@ -7,17 +7,3 @@ services:
       args:
         CASTOR_RELEASE: ${CASTOR_RELEASE:-norelease}
     image: ${DOCKER_IMAGE:-ghcr.io/sourcelair/castor}
-    environment:
-      CASTOR_WEBHOOK_URL: ${CASTOR_WEBHOOK_URL:-http://httpbin/anything}
-      CASTOR_RELEASE: ${CASTOR_RELEASE:-norelease}
-      CASTOR_ENVIRONMENT: ${CASTOR_ENVIRONMENT:-local}
-      DOCKER_HOST: unix:///var/run/docker.sock
-      SENTRY_DSN: ${SENTRY_DSN}
-    volumes:
-      - .:/usr/src/app
-      - /var/run/docker.sock:/var/run/docker.sock
-    command: python -m castor
-  httpbin:
-    image: kennethreitz/httpbin
-    ports:
-      - ${HTTPBIN_EXTERNAL_PORT:-8000}:80
