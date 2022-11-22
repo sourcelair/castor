@@ -1,0 +1,29 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+env:
+  DOCKER_IMAGE: ghcr.io/sourcelair/castor:${{ github.sha }}
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - run: pipx install poetry==1.2.2
+      - uses: actions/setup-python@v4
+        with:
+          python-version: "3.11"
+          cache: poetry
+      - run: poetry install
+      - run: poetry run black --check .
+      - run: poetry run mypy --check .
+
+  build:
+    needs: test
+    uses: ./.github/workflows/build.yml
+    with:
+      image: ghcr.io/sourcelair/castor:${{ github.sha }}

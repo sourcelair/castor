@@ -1,24 +1,17 @@
 version: "3.7"
 
 services:
-  web:
-    build: .
+  castor:
+    environment:
+      CASTOR_WEBHOOK_URL: ${CASTOR_WEBHOOK_URL:-http://httpbin/anything}
+      CASTOR_RELEASE: ${CASTOR_RELEASE:-norelease}
+      CASTOR_ENVIRONMENT: ${CASTOR_ENVIRONMENT:-local}
+      DOCKER_HOST: ${DOCKER_HOST:-unix:///var/run/docker.sock}
+      SENTRY_DSN: ${SENTRY_DSN}
     volumes:
       - .:/usr/src/app
-
-  worker:
-    build: .
-    volumes:
-      - .:/usr/src/app
-
-  capture_events:
-    build: .
-    volumes:
-      - .:/usr/src/app
-
-  builder:
-    image: node:8
-    volumes:
-      - ./castor/web/static/web:/usr/src/app
-    working_dir: /usr/src/app
-    command: npm install
+      - /var/run/docker.sock:/var/run/docker.sock
+  httpbin:
+    image: kennethreitz/httpbin
+    ports:
+      - ${HTTPBIN_EXTERNAL_PORT:-8000}:80
