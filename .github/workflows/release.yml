@@ -1,0 +1,11 @@
+name: Release
+
+on:
+  release:
+    types: [published]
+
+jobs:
+  build:
+    uses: ./.github/workflows/build.yml
+    with:
+      image: ghcr.io/sourcelair/castor:${{ github.event.release.tag_name }}
