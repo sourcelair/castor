@@ -1,5 +1,8 @@
 name: CI
 
+permissions:
+  packages: write
+
 on:
   push:
     branches: [main]
