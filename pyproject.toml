@@ -9,7 +9,7 @@ readme = "README.md"
 [tool.poetry.dependencies]
 python = "^3.11"
 httpx = "^0.23.1"
-sentry-sdk = "^1.11.0"
+sentry-sdk = "^1.14.0"
 aiodocker = "^0.21.0"
 sec = "^0.3.0"
 
