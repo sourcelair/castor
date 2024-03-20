@@ -14,7 +14,7 @@ aiodocker = "^0.21.0"
 sec = "^0.3.0"
 
 [tool.poetry.group.dev.dependencies]
-black = "^22.10.0"
+black = "^24.3.0"
 pytest = "^7.2.0"
 mypy = "^0.991"
 isort = "^5.10.1"
